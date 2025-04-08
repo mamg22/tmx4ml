@@ -1,0 +1,35 @@
+{% set origin = request.url.origin() -%}
+
+<?xml version="1.0" encoding="utf-8"?>
+<manialink>
+    <timeout>0</timeout>
+
+    {% for track in latest.Results -%}
+    <frame posn="-60 {{ 40 - loop.index0 * 8 }} 1">
+        <quad style="Bgs1" substyle="BgCardChallenge" sizen="120 8" posn="0 0 1" manialink="{{ origin }}/play/{{ track.TrackId }}" />
+        <label text="{{ track.TrackName }}" posn="2 -1 2" sizen="64 2" textsize="2" textcolor="000f"/>
+        <label text="{{ track.Authors[0].User.Name }}" posn="2 -4 2" sizen="64 2" textsize="2" textcolor="444f"/>
+
+        <quad sizen="6 6" halign="right" valign="top" posn="108 -1 5" style="Icons64x64_1" substyle="ToolLeague1"
+            url="https://tmnf.exchange/trackshow/{{ track.TrackId }}"/>
+        {% set difficulty_style = ["Easy", "Medium", "Hard", "Extreme"][track.Difficulty] -%}
+        <quad sizen="6 6" halign="right" valign="top" posn="112 -1 5" style="Icons128x128_1" substyle="{{ difficulty_style }}"/>
+
+        <quad sizen="6 6" halign="right" valign="top" posn="118 -1 5" image="{{ origin }}/image/{{ track.TrackId }}.jpg"/>
+    </frame>
+    {% endfor %}
+
+
+    {# TODO: Improve this logic for displaying the pagination buttons #}
+    {% if latest.More and request.query.after or request.query.before -%}
+    <quad posn="55 -48 8" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowFirst"
+        manialink="./?"/>
+    <quad posn="58 -48 8" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowPrev"
+        manialink="{{ request.url.update_query({'before': latest.Results[0].TrackId, 'after': ''}) }}"/>
+    {% endif %}
+    {% if latest.More -%}
+    <quad posn="61 -48 8" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowNext"
+        manialink="{{ request.url.update_query({'after': latest.Results[-1].TrackId, 'before': ''}) }}"/>
+    {% endif %}
+    <quad posn="64 -48 8" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="Refresh" manialink="{{ request.url }}"/>
+</manialink>
