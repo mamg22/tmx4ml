@@ -23,11 +23,11 @@ TRACK_LIST_FIELDS = "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty"
 async def fetch_track_list(params: Mapping[str, str]):
     url = TRACK_API_ENDPOINT + "?" + uparse.urlencode(params)
 
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as res:
-            text = await res.text()
+    session = app["client_session"]
+    async with session.get(url) as res:
+        text = await res.text()
 
-            query_res = json.loads(text)
+        query_res = json.loads(text)
 
     return query_res
 
@@ -53,24 +53,35 @@ async def root(request: Request):
 
 async def track_image(request: Request):
     trackid = request.match_info["trackid"]
-    async with aiohttp.ClientSession() as session:
-        async with session.get(
-            f"https://tmnf.exchange/trackshow/{trackid}/image/1"
-        ) as res:
-            response = web.Response(body=(await res.read()))
-            response.content_type = "image/jpeg"
-            return response
+    session = app["client_session"]
+
+    async with session.get(f"https://tmnf.exchange/trackshow/{trackid}/image/1") as res:
+        response = web.Response(body=(await res.read()))
+        response.content_type = "image/jpeg"
+        return response
 
 
 async def play_track(request: Request):
     trackid = request.match_info["trackid"]
-    async with aiohttp.ClientSession() as session:
-        async with session.get(
-            f"https://tmnf.exchange/trackplay/{trackid}", allow_redirects=False
-        ) as res:
-            location = res.headers["location"]
-            return render_manialink("redirect.xml", request, {"target": location})
+    session = app["client_session"]
 
+    async with session.get(
+        f"https://tmnf.exchange/trackplay/{trackid}", allow_redirects=False
+    ) as res:
+        location = res.headers["location"]
+        return render_manialink("redirect.xml", request, {"target": location})
+
+
+async def client_session_ctx(app: web.Application):
+    session = aiohttp.ClientSession()
+    app["client_session"] = session
+
+    yield
+
+    await session.close()
+
+
+app.cleanup_ctx.append(client_session_ctx)
 
 app.add_routes(
     [
