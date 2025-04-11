@@ -10,8 +10,12 @@ from aiohttp.web_request import Request
 import aiohttp_jinja2
 import jinja2
 
+import tmx
+
 app = web.Application()
 aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("templates"))
+
+aiohttp_jinja2.get_env(app).globals["tmx"] = tmx
 
 
 API_URL = "https://tmnf.exchange/api"
