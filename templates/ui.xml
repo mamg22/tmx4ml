@@ -11,17 +11,18 @@
 
     {# Title and subtitle #}
     <label style="TextRankingsBig" text="$iTMNF-$d00X" posn="-62.5 46.5 3" textcolor="ffff"/>
-    <label style="TextSubTitle1" text="TMNF-$d00X" posn="-62 43 3" textcolor="ffff"/>
+    <label style="TextSubTitle1" text="{{ subtitle | default('TMNF-$d00X') }}" posn="-62 43 3" textcolor="ffff"/>
 
-    {# Sidebar buttons (To be implemented) #}
-    {% for n in range(8) if n not in [4, 5, 6] %}
-        {% set icon = "Challenge" %}
-        {% set text = "Button" %}
+    {# Sidebar buttons #}
+    {% for position, button_def in sidebar_buttons | default({}) | dictsort if position in range(8) %}
+        {% set icon, label, link = button_def %}
+        {% set style, substyle = icon.split(":", 1) %}
+        {% set link_type, link_target = link.split(":", 1) %}
 
-        <frame posn="-64 {{ 39 - 10.75 * n }} 4">
-            <quad sizen="30 10" posn="0 0 0" style="Bgs1" substyle="NavButton" manialink="../?"/>
-            <quad sizen="6 6" posn="1 -2 1" style="Icons128x128_1" substyle="{{ icon }}" manialink=".."/>
-            <label sizen="20 10" posn="8 -5 1" valign="center" text="{{ text }}" style="TextButtonNav" />
+        <frame posn="-64 {{ 39 - 10.75 * position }} 4">
+            <quad sizen="30 10" posn="0 0 0" style="Bgs1" substyle="NavButton" {{ link_type }}="{{ link_target }}"/>
+            <quad sizen="6 6" posn="1 -2 1" style="{{ style }}" substyle="{{ substyle }}"/>
+            <label sizen="20 10" posn="8 -5 1" valign="center" text="{{ label }}" style="TextButtonNav" />
         </frame>
     {% endfor %}
 

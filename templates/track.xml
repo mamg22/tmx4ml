@@ -1,5 +1,12 @@
 {% set origin = request.url.origin() %}
 
+{% set sidebar_buttons = {
+    0: ("Icons64x64_1:MediaPlay", "Play", "manialink:{}/play/{}".format(origin, track.TrackId)),
+    1: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/trackshow/{}".format(track.TrackId)),
+} %}
+
+{% set subtitle = "Track details" %}
+
 {% extends "ui.xml" %}
 
 {% block body %}
