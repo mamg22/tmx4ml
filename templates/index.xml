@@ -5,10 +5,12 @@
 {% block body %}
     {% for track in latest.Results -%}
     <frame posn="{{ BODY_LEFT + 2 }} {{ 40 - loop.index0 * 8 }} 1">
-        <quad style="Bgs1" substyle="BgCardChallenge" sizen="94 8" posn="0 0 1" manialink="{{ origin }}/play/{{ track.TrackId }}" />
+        <quad style="Bgs1" substyle="BgCardChallenge" sizen="94 8" posn="0 0 1" manialink="{{ origin }}/track/{{ track.TrackId }}" />
         <label text="{{ track.TrackName }}" posn="2 -1 2" sizen="64 2" textsize="2" textcolor="000f"/>
         <label text="{{ track.Authors[0].User.Name }}" posn="2 -4 2" sizen="64 2" textsize="2" textcolor="444f"/>
 
+        <quad sizen="5 5" halign="right" valign="top" posn="77 -1.5 5" style="Icons64x64_1" substyle="MediaPlay"
+            manialink="{{ origin }}/play/{{ track.TrackId }}"/>
         <quad sizen="6 6" halign="right" valign="top" posn="83 -1 5" style="Icons64x64_1" substyle="ToolLeague1"
             url="https://tmnf.exchange/trackshow/{{ track.TrackId }}"/>
         {% set difficulty_style = ["Easy", "Medium", "Hard", "Extreme"][track.Difficulty] -%}

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import asyncio
 from collections.abc import Mapping
 import json
 import urllib.parse as uparse
@@ -9,6 +10,7 @@ from aiohttp import web
 from aiohttp.web_request import Request
 import aiohttp_jinja2
 import jinja2
+import yarl
 
 import tmx
 
@@ -65,6 +67,38 @@ async def track_image(request: Request):
         return response
 
 
+async def track_details(request: Request):
+    trackid = request.match_info["trackid"]
+    session = app["client_session"]
+
+    async with asyncio.TaskGroup() as tg:
+        track_query = {
+            "id": trackid,
+            "count": 1,
+            "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Uploader.Name,Difficulty,Routes,Mood,Tags,"
+                      "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment",
+        }
+        track_url = yarl.URL(TRACK_API_ENDPOINT).with_query(track_query)
+        track_task = tg.create_task(session.get(track_url))
+
+        replay_query = {
+            "trackId": trackid,
+            "best": 1,
+            "fields": "User.Name,ReplayTime,Position",
+        }
+        replay_url = yarl.URL(API_URL + "/replays").with_query(replay_query)
+        replay_task = tg.create_task(session.get(replay_url))
+
+    track = await track_task.result().json()
+    replays = await replay_task.result().json()
+
+    return render_manialink(
+        "track.xml",
+        request,
+        {"request": request, "track": track["Results"][0], "replays": replays},
+    )
+
+
 async def play_track(request: Request):
     trackid = request.match_info["trackid"]
     session = app["client_session"]
@@ -93,6 +127,7 @@ app.add_routes(
         web.get("/index.xml", root),
         web.get("/image/{trackid}.jpg", track_image),
         web.get("/play/{trackid}", play_track),
+        web.get("/track/{trackid}", track_details),
     ]
 )
 
