@@ -63,10 +63,11 @@
         </frame>
 
         <frame posn="2 -41">
-            {% for tag in track.Tags %}
-            <quad style="Bgs1" substyle="BgCard1" sizen="10 4" posn="{{ 0 + 10 * loop.index0 }} 0 3" />
-            <label text="{{ tmx.TrackTag(tag).name}}" posn="{{ 5 + 10 * loop.index0 }} -1 4" halign="center" sizen="8 3" textsize="2" textcolor="000f"/>
-            {% endfor %}
+        {% for tag in track.Tags %}
+        {% set tag_width = 30 / loop.length %}
+            <quad style="Bgs1" substyle="BgCard1" sizen="{{ tag_width }} 4" posn="{{ 0 + tag_width * loop.index0 }} 0 3" />
+            <label text="{{ tmx.TrackTag(tag).name}}" posn="{{ tag_width * (loop.index0 + 0.5) }} -1 4" halign="center" sizen="8 3" textsize="2" textcolor="000f"/>
+        {% endfor %}
         </frame>
     </frame>
     <frame posn="{{ BODY_LEFT + 1 }} -6">
