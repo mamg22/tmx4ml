@@ -76,7 +76,7 @@ async def track_details(request: Request):
             "id": trackid,
             "count": 1,
             "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Uploader.Name,Difficulty,Routes,Mood,Tags,"
-                      "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment",
+            "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment",
         }
         track_url = yarl.URL(TRACK_API_ENDPOINT).with_query(track_query)
         track_task = tg.create_task(session.get(track_url))
