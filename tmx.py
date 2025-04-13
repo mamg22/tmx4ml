@@ -1,6 +1,19 @@
 from enum import Enum
 
 
+def format_time(millis: int) -> str:
+    hours, rest = divmod(millis, 60 * 60 * 1000)
+    minutes, rest = divmod(rest, 60 * 1000)
+    seconds, millis = divmod(rest, 1000)
+
+    time = f"{minutes:02d}:{seconds:02d}.{millis // 10:02d}"
+
+    if hours > 0:
+        time = f"{hours:02d}:{time}"
+
+    return time
+
+
 class Difficulty(Enum):
     Beginner = 0
     Intermediate = 1
