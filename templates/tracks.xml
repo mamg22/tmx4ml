@@ -1,10 +1,18 @@
 {% set origin = request.url.origin() %}
 
+{% set sidebar_buttons = {
+    0: ("Icons128x128_1:Custom", "Random Track", "manialink:{}{}".format(origin, url("track-random")))
+}
+%}
+
 {% set subtitle = "Latest tracks" %}
 
 {% extends "ui.xml" %}
 
 {% block body %}
+    <quad style="Bgs1" substyle="BgWindow2" sizen="96 88" posn="{{ BODY_LEFT + 1 }} 46" />
+    <quad style="Bgs1" substyle="BgTitle2" sizen="94 4" posn="{{ BODY_LEFT + 2 }} 45 2" />
+    <label style="TextTitle3" text="Tracks" posn="{{ BODY_LEFT + 2 + 94 / 2 }} 44 4" sizen="92 3" halign="center" />
     {% for track in latest.Results -%}
     <frame posn="{{ BODY_LEFT + 2 }} {{ 40 - loop.index0 * 8 }} 1">
         <quad style="Bgs1" substyle="BgCardChallenge" sizen="94 8" posn="0 0 1" manialink="{{ origin ~ url('track-details', trackid=track.TrackId)}}" />
