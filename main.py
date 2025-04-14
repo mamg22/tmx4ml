@@ -15,9 +15,14 @@ import yarl
 import tmx
 
 app = web.Application()
-aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("templates"))
+aiohttp_jinja2.setup(
+    app,
+    loader=jinja2.FileSystemLoader("templates"),
+    context_processors=(aiohttp_jinja2.request_processor,),
+)
 
-aiohttp_jinja2.get_env(app).globals["tmx"] = tmx
+jinja_env = aiohttp_jinja2.get_env(app)
+jinja_env.globals["tmx"] = tmx
 
 
 BASE_URL = yarl.URL("https://tmnf.exchange")
@@ -54,7 +59,7 @@ async def root(request: Request):
 
     res = await fetch_track_list(query)
 
-    return render_manialink("index.xml", request, {"latest": res, "request": request})
+    return render_manialink("index.xml", request, {"latest": res})
 
 
 async def track_image(request: Request):
@@ -97,7 +102,7 @@ async def track_details(request: Request):
     return render_manialink(
         "track.xml",
         request,
-        {"request": request, "track": track["Results"][0], "replays": replays},
+        {"track": track["Results"][0], "replays": replays},
     )
 
 
