@@ -117,6 +117,24 @@ async def play_track(request: Request):
         return render_manialink("redirect.xml", request, {"target": location})
 
 
+async def random_track(request: Request):
+    session = app["client_session"]
+
+    async with session.get(BASE_URL / "trackrandom", allow_redirects=False) as res:
+        location = res.headers["location"]
+        trackid = location.split("/")[-1]
+
+        return render_manialink(
+            "redirect.xml",
+            request,
+            {
+                "target": request.url.origin().join(
+                    app.router["track-details"].url_for(trackid=trackid)
+                )
+            },
+        )
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -136,6 +154,7 @@ app.add_routes(
     [
         web.get("/", index, name="index"),
         web.get("/tracks/", track_list, name="track-list"),
+        web.get("/tracks/random", random_track, name="track-random"),
         web.get("/tracks/{trackid}", track_details, name="track-details"),
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
