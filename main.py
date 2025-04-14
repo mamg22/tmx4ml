@@ -49,7 +49,7 @@ def render_manialink(*args, **kwargs):
     return response
 
 
-async def root(request: Request):
+async def track_list(request: Request):
     query = {"inlatestauthor": "1", "count": "10", "fields": TRACK_LIST_FIELDS}
 
     if after := request.query.get("after"):
@@ -59,7 +59,7 @@ async def root(request: Request):
 
     res = await fetch_track_list(query)
 
-    return render_manialink("index.xml", request, {"latest": res})
+    return render_manialink("tracks.xml", request, {"latest": res})
 
 
 async def track_image(request: Request):
@@ -117,6 +117,10 @@ async def play_track(request: Request):
         return render_manialink("redirect.xml", request, {"target": location})
 
 
+async def index(request: Request):
+    return render_manialink("index.xml", request, {})
+
+
 async def client_session_ctx(app: web.Application):
     session = aiohttp.ClientSession()
     app["client_session"] = session
@@ -130,10 +134,11 @@ app.cleanup_ctx.append(client_session_ctx)
 
 app.add_routes(
     [
-        web.get("/", root, name="track-list"),
+        web.get("/", index, name="index"),
+        web.get("/tracks/", track_list, name="track-list"),
+        web.get("/tracks/{trackid}", track_details, name="track-details"),
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
-        web.get("/track/{trackid}", track_details, name="track-details"),
     ]
 )
 
