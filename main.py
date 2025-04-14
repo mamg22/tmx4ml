@@ -130,11 +130,10 @@ app.cleanup_ctx.append(client_session_ctx)
 
 app.add_routes(
     [
-        web.get("/", root),
-        web.get("/index.xml", root),
-        web.get("/image/{trackid}.jpg", track_image),
-        web.get("/play/{trackid}", play_track),
-        web.get("/track/{trackid}", track_details),
+        web.get("/", root, name="track-list"),
+        web.get("/image/{trackid}.jpg", track_image, name="track-image"),
+        web.get("/play/{trackid}", play_track, name="track-play"),
+        web.get("/track/{trackid}", track_details, name="track-details"),
     ]
 )
 
