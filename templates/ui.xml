@@ -7,7 +7,7 @@
 
     {# Sidebar + Sidebar title space #}
     <quad sizen="30 96" posn="-64 48 1" style="Bgs1" substyle="BgWindow1"/>
-    <quad sizen="29 7" posn="-63.5 47.5 2" style="Bgs1" substyle="BgTitlePage"/>
+    <quad sizen="29 7" posn="-63.5 47.5 2" style="Bgs1" substyle="BgTitlePage" manialink="{{ request.url.origin() }}"/>
 
     {# Title and subtitle #}
     <label style="TextRankingsBig" text="$iTMNF-$d00X" posn="-62.5 46.5 3" textcolor="ffff"/>
