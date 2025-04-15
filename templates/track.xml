@@ -97,6 +97,28 @@
         <quad style="MedalsBig" substyle="MedalBronze" posn="24 -10 6" sizen="3 3" />
         <label text="{{ tmx.format_time(track.BronzeTarget) }}" style="TextRaceChrono" scale="0.5" posn="28 -10" sizen="20 3" />
     </frame>
+    <frame posn="{{ BODY_LEFT + 1 }} -23">
+        <quad style="Bgs1" substyle="BgWindow2" sizen="48 19" posn="0 0" />
+        <quad style="Bgs1" substyle="BgTitle2" sizen="46 4" posn="1 -1 2" />
+        <label style="TextTitle3" text="Details" posn="24 -2 4" sizen="44 3" halign="center" />
+
+        <frame posn="2 -2 4">
+            <label text="ID" style="TextStaticSmall" posn="0 -4"/>
+            <label text="#" style="TextStaticSmall" posn="10 -4" halign="right"/>
+            <entry default="{{ track.TrackId }}" style="TextStaticSmall" posn="10 -4"/>
+
+            <label text="Uploaded" style="TextStaticSmall" posn="0 -7"/>
+            <label text="{{ track.UploadedAt }}" style="TextStaticSmall" posn="10 -7"/>
+
+            <label text="Updated" style="TextStaticSmall" posn="0 -10"/>
+            <label text="{{ track.UpdatedAt }}" style="TextStaticSmall" posn="10 -10"/>
+
+            {% if track.UnlimiterVersion %}
+                <label text="Unlimiter" style="TextStaticSmall" posn="0 -13"/>
+                <label text="{{ tmx.UnlimiterVersion(track.UnlimiterVersion) }}" style="TextStaticSmall" posn="10 -13"/>
+            {% endif %}
+        </frame>
+    </frame>
     <frame posn="{{ BODY_LEFT + 50 }} 44">
         <quad style="Bgs1" substyle="BgWindow2" sizen="46 37" posn="0 0" />
         <quad style="Bgs1" substyle="BgTitle2" sizen="44 4" posn="1 -1 2" />
@@ -109,5 +131,14 @@
             <label text="{{ tmx.format_time(replay.ReplayTime) }}" style="TextRaceChrono" halign="right" scale="0.4" posn="42 0" sizen="40 2" />
         </frame>
         {% endfor %}
+    </frame>
+    <frame posn="{{ BODY_LEFT + 50 }} 6">
+        <quad style="Bgs1" substyle="BgWindow2" sizen="46 48" posn="0 0" />
+        <quad style="Bgs1" substyle="BgTitle2" sizen="44 4" posn="1 -1 2" />
+        <label style="TextTitle3" text="Author commens" posn="23 -2 4" sizen="42 3" halign="center" />
+
+        {% set comment_style = "TextStaticSmall" if track.AuthorComments else "" %}
+        <label text="{{ track.AuthorComments | default('$i$bbb(No text defined)', true) }}"
+        style="TextStaticSmall" sizen="43 42" posn="2 -6 4" autonewline="1" maxline="16"/>
     </frame>
 {% endblock body %}
