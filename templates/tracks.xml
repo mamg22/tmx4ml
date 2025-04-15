@@ -31,14 +31,15 @@
     {% endfor %}
 
 
-    {# TODO: Improve this logic for displaying the pagination buttons #}
-    {% if latest.More and request.query.after or request.query.before -%}
+    {% if request.query.after or request.query.before -%}
     <quad posn="40 -48" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowFirst"
         manialink="./?"/>
+    {% endif %}
+    {% if request.query.after or (request.query.before and latest.More) -%}
     <quad posn="43 -48" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowPrev"
         manialink="{{ request.url.update_query({'before': latest.Results[0].TrackId, 'after': ''}) }}"/>
     {% endif %}
-    {% if latest.More -%}
+    {% if request.query.before or latest.More -%}
     <quad posn="46 -48" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ArrowNext"
         manialink="{{ request.url.update_query({'after': latest.Results[-1].TrackId, 'before': ''}) }}"/>
     {% endif %}
