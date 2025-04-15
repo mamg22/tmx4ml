@@ -149,6 +149,9 @@ class UnlimiterVersion(Enum):
     V1_3 = 6
     V2_0 = 7
 
+    def __str__(self) -> str:
+        return self.name.replace("_", ".").removeprefix("V")
+
 
 class UserSearchOrder(Enum):
     None_ = 0
@@ -186,3 +189,6 @@ class Vehicle(Enum):
     CoastCar = 5
     BayCar = 6
     StadiumCar = 7
+
+    def __str__(self) -> str:
+        return self.name.removesuffix("Car")
