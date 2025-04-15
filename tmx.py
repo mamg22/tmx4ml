@@ -14,14 +14,21 @@ def format_time(millis: int) -> str:
     return time
 
 
-class Difficulty(Enum):
+class StringableEnum(Enum):
+    """Creates Enum types whose string representation is just their name"""
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Difficulty(StringableEnum):
     Beginner = 0
     Intermediate = 1
     Expert = 2
     Lunatic = 3
 
 
-class Environment(Enum):
+class Environment(StringableEnum):
     Snow = 1
     Desert = 2
     Rally = 3
@@ -31,7 +38,7 @@ class Environment(Enum):
     Stadium = 7
 
 
-class Leaderboard(Enum):
+class Leaderboard(StringableEnum):
     Standard = 0
     Classic = 1
     Nadeo = 2
@@ -40,14 +47,14 @@ class Leaderboard(Enum):
     Star = 5
 
 
-class Mood(Enum):
+class Mood(StringableEnum):
     Sunrise = 0
     Day = 1
     Sunset = 2
     Night = 3
 
 
-class Route(Enum):
+class Route(StringableEnum):
     Single = 0
     Multiple = 1
     Symmetrical = 2
@@ -115,7 +122,7 @@ class TrackSearchOrder(Enum):
     UserRecordPositionDesc = 38
 
 
-class TrackTag(Enum):
+class TrackTag(StringableEnum):
     Normal = 0
     Stunt = 1
     Maze = 2
@@ -131,7 +138,7 @@ class TrackTag(Enum):
     Grass = 12
 
 
-class TrackType(Enum):
+class TrackType(StringableEnum):
     Race = 0
     Puzzle = 1
     Platform = 2
