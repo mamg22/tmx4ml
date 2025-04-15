@@ -56,10 +56,20 @@
             <quad style="Icons64x64_1" substyle="NewMessage" posn="0 0 4" sizen="3 3" />
             <label style="TextCardSmallScores2" text="{{ track.Comments }}" posn="13 -0.5 4" sizen="13 3" halign="right" />
         </frame>
-        {# TODO: Handle non-common leaderboards #}
+
         <frame posn="33 -38">
-            <quad style="Icons128x128_1" substyle="LadderPoints" posn="0 0 4" sizen="3 3" />
-            <label style="TextCardSmallScores2" text="{{ track.TrackValue }}" posn="13 -0.5 4" sizen="13 3" halign="right" />
+            {% set lb_type = tmx.Leaderboard(track.ReplayType) %}
+        {% set lb_style, lb_substyle = {
+            tmx.Leaderboard.Standard:      "Icons128x128_1:LadderPoints",
+            tmx.Leaderboard.Classic:       "Icons128x128_1:Forever",
+            tmx.Leaderboard.Nadeo:         "Icons128x128_1:Nations",
+            tmx.Leaderboard.Uncompetitive: "Icons64x64_1:QuitRace",
+            tmx.Leaderboard.Beta:          "Icons128x128_1:Nations",
+            tmx.Leaderboard.Star:          "BgRaceScore2:Fame",
+        }[lb_type].split(":", 1) %}
+            {% set lb_text = track.TrackValue if lb_type == tmx.Leaderboard.Standard else lb_type.name %}
+            <quad style="{{ lb_style }}" substyle="{{ lb_substyle }}" posn="0 0 4" sizen="3 3" />
+            <label style="TextCardSmallScores2" text="{{ lb_text }}" posn="13 -0.5 4" sizen="10 3" halign="right" />
         </frame>
 
         <frame posn="2 -41">
