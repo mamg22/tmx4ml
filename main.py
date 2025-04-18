@@ -50,7 +50,14 @@ def render_manialink(*args, **kwargs):
 
 
 async def track_list(request: Request):
-    query = {"inlatestauthor": "1", "count": "10", "fields": TRACK_LIST_FIELDS}
+    query = {
+        "count": "10",
+        "fields": TRACK_LIST_FIELDS,
+        "order1": str(tmx.TrackSearchOrder.UploadDateDesc.value),
+    }
+
+    if search := request.query.get("query"):
+        query["name"] = search
 
     if after := request.query.get("after"):
         query["after"] = after

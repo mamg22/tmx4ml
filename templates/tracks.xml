@@ -15,8 +15,9 @@
     <label style="TextTitle3" text="Find tracks" posn="{{ BODY_LEFT + 2 + 94 / 2 }} 44 4" sizen="92 3" halign="center" />
 
     <quad style="Bgs1" substyle="BgPager" sizen="94 4" posn="{{ BODY_LEFT + 2 }} 40 2" />
-    <entry textsize="2" textcolor="ffff" default="search" posn="{{ BODY_LEFT + 4 }} 39.3 4" sizen="92 3" name="search_query"/>
-    <quad style="Icons64x64_1" substyle="Maximize" sizen="4 4" posn="{{ BODY_LEFT + 96 }} 40 5" halign="right"/>
+    <entry textsize="2" textcolor="ffff" posn="{{ BODY_LEFT + 4 }} 39.3 4" sizen="92 3" name="search_query" default="{{ request.query.query }}"/>
+    <quad style="Icons64x64_1" substyle="Maximize" sizen="4 4" posn="{{ BODY_LEFT + 96 }} 40 5" halign="right"
+        manialink="./?query=search_query"/>
 
     <quad style="Bgs1" substyle="BgList" sizen="94 72" posn="{{ BODY_LEFT + 2 }} 35 2" />
     {% for track in latest.Results -%}
