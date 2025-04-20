@@ -82,7 +82,7 @@ def parse_track_query(query: str) -> dict[str, str]:
                     ):
                         raise ValueError(collection)
 
-                    params["in:" + collection_name] = "0" if negate else "1"
+                    params["in" + collection_name] = "0" if negate else "1"
             case ["lbtype", type_name]:
                 leaderboard_type = find_member(tmx.Leaderboard, type_name)
                 params["lbtype"] = str(leaderboard_type.value)
