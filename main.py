@@ -12,6 +12,7 @@ import aiohttp_jinja2
 import jinja2
 import yarl
 
+import query_parser
 import tmx
 
 app = web.Application()
@@ -50,23 +51,22 @@ def render_manialink(*args, **kwargs):
 
 
 async def track_list(request: Request):
-    query = {
+    params = {
         "count": "10",
         "fields": TRACK_LIST_FIELDS,
-        "order1": str(tmx.TrackSearchOrder.UploadDateDesc.value),
     }
 
-    if search := request.query.get("query"):
-        query["name"] = search
+    if query := request.query.get("query"):
+        params |= query_parser.parse_track_query(query)
 
     if after := request.query.get("after"):
-        query["after"] = after
+        params["after"] = after
     if before := request.query.get("before"):
-        query["before"] = before
+        params["before"] = before
 
-    res = await fetch_track_list(query)
+    res = await fetch_track_list(params)
 
-    return render_manialink("tracks.xml", request, {"latest": res})
+    return render_manialink("tracks.xml", request, {"tracks": res})
 
 
 async def track_image(request: Request):
