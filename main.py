@@ -3,7 +3,6 @@
 import asyncio
 from collections.abc import Mapping
 import json
-import urllib.parse as uparse
 
 import aiohttp
 from aiohttp import web
