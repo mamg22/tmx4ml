@@ -89,7 +89,7 @@ async def track_details(request: Request):
         track_query = {
             "id": trackid,
             "count": 1,
-            "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Uploader.Name,Difficulty,Routes,Mood,Tags,"
+            "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Authors,Difficulty,Routes,Mood,Tags,"
             "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment,UploadedAt,UpdatedAt,UnlimiterVersion,AuthorComments",
         }
         track_url = (API_URL / "tracks").with_query(track_query)
