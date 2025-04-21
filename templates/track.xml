@@ -10,20 +10,14 @@
 {% extends "ui.xml" %}
 
 {% block body %}
-    <frame posn="{{ BODY_LEFT + 1 }} 44">
-        <quad style="Bgs1" substyle="BgWindow2" sizen="48 48" posn="0 0" />
-        <quad style="Bgs1" substyle="BgTitle2" sizen="46 4" posn="1 -1 2" />
-        <label style="TextTitle3" text="{{ track.TrackName }}" posn="24 -2 4" sizen="44 3" halign="center" />
+    {% call(width, height) titled_box(track.TrackName, BODY_LEFT + 1, 44, 48, 48) %}
+        <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="-1 -0 4" sizen="3 3" />
+        <label style="TextCardSmallScores2" text="{{ track.Authors | map(attribute='User') | join(', ', attribute='Name')  }}" posn="3 -0.5 4" sizen="44 3" />
 
-        <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="1 -6 4" sizen="3 3" />
-        <label style="TextCardSmallScores2" text="{{ track.Authors | map(attribute='User') | join(', ', attribute='Name')  }}" posn="5 -6.5 4" sizen="44 3" />
+        <quad style="Bgs1" substyle="BgIconBorder" posn="-.5 -4 3" sizen="31 31" />
+        <quad posn="0 -4.5 4" sizen="30 30" image="{{ origin ~ url('track-image', trackid=track.TrackId) }}"/>
 
-        <quad style="Icons128x128_1" substyle="{{ difficulty_style }}" halign="right" posn="47 -6 4" sizen="3 3" />
-
-        <quad style="Bgs1" substyle="BgIconBorder" posn="1.5 -10 3" sizen="31 31" />
-        <quad posn="2 -10.5 4" sizen="30 30" image="{{ origin ~ url('track-image', trackid=track.TrackId) }}"/>
-
-        <frame posn="33 -10">
+        <frame posn="31 -4">
             <frame posn="0 0">
                 <quad style="Icons128x128_1" substyle="Editor" posn="0 0 4" sizen="3 3" />
                 <label style="TextCardSmallScores2" text="{{ tmx.TrackType(track.PrimaryType) }}" posn="13 -0.5 4" sizen="13 3" halign="right" />
@@ -74,31 +68,27 @@
             </frame>
         </frame>
 
-        <frame posn="2 -41">
+        <frame posn="0 -36">
         {% for tag in track.Tags %}
         {% set tag_width = 30 / loop.length %}
             <quad style="Bgs1" substyle="BgCard1" sizen="{{ tag_width }} 4" posn="{{ 0 + tag_width * loop.index0 }} 0 3" />
             <label text="{{ tmx.TrackTag(tag) }}" posn="{{ tag_width * (loop.index0 + 0.5) }} -1 4" halign="center" sizen="8 3" textsize="2" textcolor="000f"/>
         {% endfor %}
         </frame>
-    </frame>
-    <frame posn="{{ BODY_LEFT + 1 }} -6">
-        <quad style="Bgs1" substyle="BgWindow2" sizen="48 16" posn="0 0" />
-        <quad style="Bgs1" substyle="BgTitle2" sizen="46 4" posn="1 -1 2" />
-        <label style="TextTitle3" text="Medals" posn="24 -2 4" sizen="44 3" halign="center" />
+    {% endcall %}
+    {% call(width, height) titled_box('Medals', BODY_LEFT + 1, -6, 48, 16, z=10) %}
+        <quad style="MedalsBig" substyle="MedalNadeo" posn="0 0" sizen="3 3" />
+        <label text="{{ tmx.format_time(track.AuthorTime) }}" style="TextRaceChrono" scale="0.5" posn="4 0" sizen="20 3" />
 
-        <quad style="MedalsBig" substyle="MedalNadeo" posn="2 -6 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.AuthorTime) }}" style="TextRaceChrono" scale="0.5" posn="6 -6" sizen="20 3" />
+        <quad style="MedalsBig" substyle="MedalGold" posn="0 -4 6" sizen="3 3" />
+        <label text="{{ tmx.format_time(track.GoldTarget) }}" style="TextRaceChrono" scale="0.5" posn="4 -4" sizen="20 3" />
 
-        <quad style="MedalsBig" substyle="MedalGold" posn="2 -10 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.GoldTarget) }}" style="TextRaceChrono" scale="0.5" posn="6 -10" sizen="20 3" />
+        <quad style="MedalsBig" substyle="MedalSilver" posn="{{ width / 2 }} 0 6" sizen="3 3" />
+        <label text="{{ tmx.format_time(track.SilverTarget) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} 0" sizen="20 3" />
 
-        <quad style="MedalsBig" substyle="MedalSilver" posn="24 -6 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.SilverTarget) }}" style="TextRaceChrono" scale="0.5" posn="28 -6" sizen="20 3" />
-
-        <quad style="MedalsBig" substyle="MedalBronze" posn="24 -10 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.BronzeTarget) }}" style="TextRaceChrono" scale="0.5" posn="28 -10" sizen="20 3" />
-    </frame>
+        <quad style="MedalsBig" substyle="MedalBronze" posn="{{ width / 2 }} -4 6" sizen="3 3" />
+        <label text="{{ tmx.format_time(track.BronzeTarget) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} -4" sizen="20 3" />
+    {% endcall %}
     <frame posn="{{ BODY_LEFT + 1 }} -23">
         <quad style="Bgs1" substyle="BgWindow2" sizen="48 19" posn="0 0" />
         <quad style="Bgs1" substyle="BgTitle2" sizen="46 4" posn="1 -1 2" />
@@ -121,26 +111,18 @@
             {% endif %}
         </frame>
     </frame>
-    <frame posn="{{ BODY_LEFT + 50 }} 44">
-        <quad style="Bgs1" substyle="BgWindow2" sizen="46 37" posn="0 0" />
-        <quad style="Bgs1" substyle="BgTitle2" sizen="44 4" posn="1 -1 2" />
-        <label style="TextTitle3" text="Offline Records" posn="23 -2 4" sizen="42 3" halign="center" />
-
+    {% call(width, height) titled_box("Offline Records", BODY_LEFT + 50, 44, 46, 37) %}
         {% for replay in replays.Results %}
-        <frame posn="2 {{ -6 + loop.index0 * -3 }} 4">
+        <frame posn="0 {{ loop.index0 * -3 }} 4">
             <label text="{{ loop.index }}" style="TextStaticSmall" posn="0 0"/>
             <label text="{{ replay.User.Name }}" style="TextStaticSmall" posn="3 0" />
             <label text="{{ tmx.format_time(replay.ReplayTime) }}" style="TextRaceChrono" halign="right" scale="0.4" posn="42 0" sizen="40 2" />
         </frame>
         {% endfor %}
-    </frame>
-    <frame posn="{{ BODY_LEFT + 50 }} 6">
-        <quad style="Bgs1" substyle="BgWindow2" sizen="46 48" posn="0 0" />
-        <quad style="Bgs1" substyle="BgTitle2" sizen="44 4" posn="1 -1 2" />
-        <label style="TextTitle3" text="Author commens" posn="23 -2 4" sizen="42 3" halign="center" />
-
+    {% endcall %}
+    {% call(width, height) titled_box("Author comments", BODY_LEFT + 50, 6, 46, 48) %}
         {% set comment_style = "TextStaticSmall" if track.AuthorComments else "" %}
         <label text="{{ track.AuthorComments | default('$i$bbb(No text defined)', true) }}"
-        style="TextStaticSmall" sizen="43 42" posn="2 -6 4" autonewline="1" maxline="16"/>
-    </frame>
+        style="TextStaticSmall" sizen="43 42" posn="0 0 4" autonewline="1" maxline="16"/>
+    {% endcall %}
 {% endblock body %}

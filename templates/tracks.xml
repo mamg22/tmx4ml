@@ -10,18 +10,15 @@
 {% extends "ui.xml" %}
 
 {% block body %}
-    <quad style="Bgs1" substyle="BgWindow2" sizen="96 89" posn="{{ BODY_LEFT + 1 }} 46" />
-    <quad style="Bgs1" substyle="BgTitle2" sizen="94 4" posn="{{ BODY_LEFT + 2 }} 45 2" />
-    <label style="TextTitle3" text="Find tracks" posn="{{ BODY_LEFT + 2 + 94 / 2 }} 44 4" sizen="92 3" halign="center" />
-
-    <quad style="Bgs1" substyle="BgPager" sizen="94 4" posn="{{ BODY_LEFT + 2 }} 40 2" />
-    <entry textsize="2" textcolor="ffff" posn="{{ BODY_LEFT + 4 }} 39.3 4" sizen="92 3" name="search_query" default="{{ request.query.query }}"/>
-    <quad style="Icons64x64_1" substyle="Maximize" sizen="4 4" posn="{{ BODY_LEFT + 96 }} 40 5" halign="right"
+{% call(width, height) titled_box("Find tracks", BODY_LEFT + 1, 46, 96, 89) %}
+    <quad style="Bgs1" substyle="BgPager" sizen="{{ width }} 4" posn="0 0 2" />
+    <entry textsize="2" textcolor="ffff" posn="2 -1 4" sizen="92 3" name="search_query" default="{{ request.query.query }}"/>
+    <quad style="Icons64x64_1" substyle="Maximize" sizen="4 4" posn="{{ width }} 0 5" halign="right"
         manialink="./?query=search_query"/>
 
-    <quad style="Bgs1" substyle="BgList" sizen="94 72" posn="{{ BODY_LEFT + 2 }} 35 2" />
+    <quad style="Bgs1" substyle="BgList" sizen="94 72" posn="-1 -5.5 2" />
     {% for track in tracks.Results -%}
-    <frame posn="{{ BODY_LEFT + 3 }} {{ 34 - loop.index0 * 7 }} 3">
+    <frame posn="0 {{ -6 - loop.index0 * 7 }} 3">
         <quad style="Bgs1" substyle="BgCardChallenge" sizen="92 7" posn="0 0 1" manialink="{{ origin ~ url('track-details', trackid=track.TrackId)}}" />
         <label text="{{ track.TrackName }}" posn="2 -1 2" sizen="20 2" textsize="2" textcolor="000f"/>
         <label text="{{ track.Authors[0].User.Name }}" posn="2 -4 2" sizen="64 2" textsize="2" textcolor="444f"/>
@@ -55,7 +52,8 @@
         'manialink': request.url.update_query({'after': tracks.Results[-1].TrackId, 'before': ''}) if enable_next
     } -%}
 
-    <quad posn="{{ BODY_LEFT + 3 }} -38 7" sizen="3 3" style="Icons64x64_1" {{ first_attrs | xmlattr }} />
-    <quad posn="-5 -38 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ prev_attrs | xmlattr }} />
-    <quad posn="5 -38 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ next_attrs | xmlattr }} />
+    <quad posn="0 {{ -height + 4 }} 7" sizen="3 3" style="Icons64x64_1" {{ first_attrs | xmlattr }} />
+    <quad posn="{{ width / 2 - 5 }} {{ -height + 4 }} 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ prev_attrs | xmlattr }} />
+    <quad posn="{{ width / 2 + 5 }} {{ -height + 4 }} 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ next_attrs | xmlattr }} />
+{% endcall %}
 {% endblock body %}

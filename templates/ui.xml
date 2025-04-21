@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+{%- macro titled_box(title, x, y, width, height, z=0) -%}
+<frame posn="{{ x }} {{ y }} {{ z }}">
+    <quad style="Bgs1" substyle="BgWindow2" sizen="{{ width }} {{ height }}" posn="0 0" />
+    <quad style="Bgs1" substyle="BgTitle2" sizen="{{ width - 2 }} 4" posn="1 -1 2" />
+    <label style="TextTitle3" text="{{ title }}" posn="{{ width / 2 }} -2 4" sizen="{{ width - 4 }} 3" halign="center" />
+    <frame posn="2 -6">
+        {{ caller(width - 4, height - 7) }}
+    </frame>
+</frame>
+{%- endmacro -%}
+
 <manialink>
     <timeout>0</timeout>
 
