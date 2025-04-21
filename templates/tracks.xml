@@ -37,7 +37,7 @@
     {%- set enable_first = request.query.after or request.query.before -%}
     {%- set first_attrs = {
         'substyle': 'ArrowFirst' if enable_first else 'StarGold',
-        'manialink': './?' if enable_first
+        'manialink': request.url.update_query({'before': '', 'after': ''}) if enable_first
     } -%}
 
     {%- set enable_prev = request.query.after or (request.query.before and tracks.More) -%}
