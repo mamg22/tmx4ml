@@ -141,6 +141,26 @@ async def random_track(request: Request):
         )
 
 
+async def trackpack_list(request: Request):
+    session = app["client_session"]
+    params = {"fields": "PackId,PackName,Creator.Name,Tracks", "count": 18}
+
+    url = API_URL / "trackpacks"
+
+    if query := request.query.get("query"):
+        params |= query_parser.parse_trackpack_query(query)
+
+    if after := request.query.get("after"):
+        params["after"] = after
+    if before := request.query.get("before"):
+        params["before"] = before
+
+    async with session.get(url.with_query(params)) as res:
+        results = await res.json()
+
+    return render_manialink("trackpacks.xml", request, {"trackpacks": results})
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -164,6 +184,7 @@ app.add_routes(
         web.get("/tracks/{trackid}", track_details, name="track-details"),
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
+        web.get("/trackpack/", trackpack_list, name="trackpack-list"),
     ]
 )
 

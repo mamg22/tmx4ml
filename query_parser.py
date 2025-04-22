@@ -91,6 +91,8 @@ def parse_track_query(query: str) -> dict[str, str]:
             case ["order1" | "order2" as order, order_name]:
                 order_type = find_member(tmx.TrackSearchOrder, order_name)
                 params[order] = str(order_type.value)
+            case ["packid", pack_id]:
+                params["packid"] = pack_id
             case ["routes", route_list]:
                 params["routes"] = parse_member_list(tmx.Route, route_list)
             case ["tags", tags_str]:
@@ -127,6 +129,25 @@ def parse_track_query(query: str) -> dict[str, str]:
                 params["vehicle"] = parse_member_list(
                     tmx.Vehicle, (car + "Car" for car in car_list.split(","))
                 )
+            case [text]:
+                try:
+                    params["name"] += f" {text}"
+                except KeyError:
+                    params["name"] = text
+
+    return params
+
+
+def parse_trackpack_query(query: str) -> dict[str, str]:
+    params = {}
+
+    for item in shlex.split(query):
+        match item.split(":", 1):
+            case ["creator", name]:
+                params["creator"] = name
+            case ["order1" | "order2" as order, order_name]:
+                order_type = find_member(tmx.TrackpackSearchOrder, order_name)
+                params[order] = str(order_type.value)
             case [text]:
                 try:
                     params["name"] += f" {text}"
