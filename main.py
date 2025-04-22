@@ -161,6 +161,29 @@ async def trackpack_list(request: Request):
     return render_manialink("trackpacks.xml", request, {"trackpacks": results})
 
 
+async def user_list(request: Request):
+    session = app["client_session"]
+    params = {
+        "fields": "UserId,Name,IsSupporter,IsModerator",
+        "count": 18,
+    }
+
+    url = API_URL / "users"
+
+    if query := request.query.get("query"):
+        params |= query_parser.parse_user_query(query)
+
+    if after := request.query.get("after"):
+        params["after"] = after
+    if before := request.query.get("before"):
+        params["before"] = before
+
+    async with session.get(url.with_query(params)) as res:
+        results = await res.json()
+
+    return render_manialink("users.xml", request, {"users": results})
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -185,6 +208,7 @@ app.add_routes(
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
+        web.get("/user/", user_list, name="user-list"),
     ]
 )
 

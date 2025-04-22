@@ -155,3 +155,40 @@ def parse_trackpack_query(query: str) -> dict[str, str]:
                     params["name"] = text
 
     return params
+
+
+def parse_user_query(query: str) -> dict[str, str]:
+    params = {}
+
+    for item in shlex.split(query):
+        match item.split(":", 1):
+            case ["in", collection_list]:
+                for collection in collection_list.split(","):
+                    collection_name = collection.removeprefix("!")
+                    negate = collection.startswith("!")
+                    if collection_name not in ("supporters", "moderators"):
+                        raise ValueError(collection)
+
+                    params["in" + collection_name] = "0" if negate else "1"
+            case ["tracks" | "awards" | "awardsgiven" as criteria, range_spec]:
+                min, max = range_spec.split("...", 1)
+
+                if min:
+                    params[f"{criteria}min"] = min
+                if max:
+                    params[f"{criteria}max"] = max
+            # Not a typo, for some weird reason TMX uses this keyword for registration date in searches
+            case ["uploaded", daterange_spec]:
+                begin, end = daterange_spec.split("...", 1)
+
+                if begin:
+                    params["registeredafter"] = begin
+                if end:
+                    params["registeredbefore"] = end
+            case [text]:
+                try:
+                    params["name"] += f" {text}"
+                except KeyError:
+                    params["name"] = text
+
+    return params
