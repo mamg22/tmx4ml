@@ -170,6 +170,9 @@ def parse_user_query(query: str) -> dict[str, str]:
                         raise ValueError(collection)
 
                     params["in" + collection_name] = "0" if negate else "1"
+            case ["order1" | "order2" as order, order_name]:
+                order_type = find_member(tmx.UserSearchOrder, order_name)
+                params[order] = str(order_type.value)
             case ["tracks" | "awards" | "awardsgiven" as criteria, range_spec]:
                 min, max = range_spec.split("...", 1)
 
