@@ -1,0 +1,49 @@
+{% set origin = request.url.origin() %}
+{% set quoted_name = '"{}"'.format(user.Name) %}
+
+{% set sidebar_buttons = {
+0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query='author:' ~ quoted_name))),
+1: ("Icons128x128_1:Browse", "Trackpacks", "manialink:{}{}".format(origin, url("trackpack-list").with_query(query='creator:' ~ quoted_name))),
+2: ("Icons128x32_1:RT_Cup", "Awards Received", "manialink:{}{}".format(origin, url("track-list").with_query(
+    query='order1:awardcountdesc author:' ~ quoted_name))),
+3: ("Icons64x64_1:StateSuggested", "Awards Given", "manialink:{}{}".format(origin, url("track-list").with_query(
+    query='order1:personalawardsetdesc awardedby:' ~ quoted_name))),
+4: ("Icons64x64_1:Inbox", "Comments Received", "manialink:{}{}".format(origin, url("track-list").with_query(
+    query='order1:commentcountdesc author:' ~ quoted_name))),
+5: ("Icons64x64_1:Outbox", "Comments Given", "manialink:{}{}".format(origin, url("track-list").with_query(
+    query='order1:personalawardsetdesc commentedby:' ~ quoted_name))),
+7: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/usershow/{}".format(user.UserId)),
+} %}
+
+{% set subtitle = "User details" %}
+
+{% extends "ui.xml" %}
+
+{% block body %}
+    {% call(width, height) titled_box("Profile", BODY_LEFT + 2, 40, 50, 14) %}
+    <label text="{{ user.Name }}" posn="0 0 3" sizen="{{ width }}" textsize="3"/>
+
+    <label text="ID #" style="TextStaticSmall" posn="{{ width - 7 }} {{ -height }}" halign="right" valign="bottom"/>
+    <entry default="{{ user.UserId }}" posn="{{ width }} {{ -height }} 3" halign="right" valign="bottom" sizen="7" style="TextStaticSmall"/>
+    {% endcall %}
+    {% call(width, height) titled_box("User comments", BODY_LEFT + 2, 24, 50, 70) %}
+        {% set comment_style = "TextStaticSmall" if user.UserComments else "" %}
+        <label text="{{ user.UserComments | default('$i$bbb(No text defined)', true) }}"
+        style="TextStaticSmall" sizen="{{ width }} {{ height }}" posn="0 0 4" autonewline="1" maxline="20"/>
+    {% endcall %}
+    {% call(width, height) titled_box("Statistics", BODY_LEFT + 54, 40, 42, 31) %}
+    {% for field, value in {
+        "Tracks": user.Tracks,
+        "Track Packs": user.TrackPacks,
+        "Awards Received": user.TrackAwardsReceived,
+        "Awards Given": user.TrackAwardsGiven,
+        "Comments Received": user.TrackCommentsReceived,
+        "Comments Given": user.TrackCommentsGiven,
+    }.items() %}
+        <frame posn="0 {{ -4 * loop.index0 }}">
+            <label style="TextStaticSmall" text="{{ field }}" posn="0 0 5"/>
+            <label style="TextStaticSmall" text="{{ value }}" posn="{{ width }} 0 4" halign="right"/>
+        </frame>
+    {% endfor %}
+    {% endcall %}
+{% endblock body %}

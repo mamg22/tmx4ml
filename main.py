@@ -184,6 +184,25 @@ async def user_list(request: Request):
     return render_manialink("users.xml", request, {"users": results})
 
 
+async def user_details(request: Request):
+    session = app["client_session"]
+    userid = request.match_info["userid"]
+
+    params = {
+        "id": userid,
+        "fields": "UserId,Name,IsSupporter,IsModerator,RegisteredAt,Tracks,TrackPacks,UserComments,"
+        "TrackCommentsReceived,TrackCommentsGiven,TrackAwardsReceived,TrackAwardsGiven",
+        "count": 1,
+    }
+
+    url = API_URL / "users"
+
+    async with session.get(url.with_query(params)) as res:
+        user = await res.json()
+
+    return render_manialink("user.xml", request, {"user": user["Results"][0]})
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -209,6 +228,7 @@ app.add_routes(
         web.get("/play/{trackid}", play_track, name="track-play"),
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
         web.get("/user/", user_list, name="user-list"),
+        web.get("/user/{userid}", user_details, name="user-details"),
     ]
 )
 
