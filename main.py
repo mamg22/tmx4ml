@@ -203,6 +203,23 @@ async def user_details(request: Request):
     return render_manialink("user.xml", request, {"user": user["Results"][0]})
 
 
+async def random_user(request: Request):
+    session = app["client_session"]
+
+    async with session.get(BASE_URL / "userrandom", allow_redirects=False) as res:
+        userid = res.headers["location"].split("/")[-1]
+
+        return render_manialink(
+            "redirect.xml",
+            request,
+            {
+                "target": request.url.origin().join(
+                    app.router["user-details"].url_for(userid=userid)
+                )
+            },
+        )
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -229,6 +246,7 @@ app.add_routes(
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
         web.get("/user/", user_list, name="user-list"),
         web.get("/user/{userid}", user_details, name="user-details"),
+        web.get("/user/random", random_user, name="user-random"),
     ]
 )
 

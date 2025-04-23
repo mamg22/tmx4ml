@@ -1,6 +1,7 @@
 {% set origin = request.url.origin() %}
 
 {% set sidebar_buttons = {
+0: ("Icons64x64_1:NotBuddy", "Random User", "manialink:{}{}".format(origin, url("user-random")))
 }
 %}
 
