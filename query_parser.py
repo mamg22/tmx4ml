@@ -195,3 +195,25 @@ def parse_user_query(query: str) -> dict[str, str]:
                     params["name"] = text
 
     return params
+
+
+def parse_leaderboard_query(query: str) -> dict[str, str]:
+    params = {}
+
+    for item in shlex.split(query):
+        match item.split(":", 1):
+            case ["lbenv", "all"]:
+                params["lbenv"] = "0"
+            case ["lbenv", lb_env]:
+                env = find_member(tmx.Environment, lb_env)
+                params["lbenv"] = str(env.value)
+            case ["lbid", lb_id]:
+                try:
+                    lb_type = find_member(tmx.Leaderboard, lb_id)
+                    params["lbid"] = str(lb_type.value)
+                except KeyError:
+                    params["lbid"] = lb_id
+            case [name]:
+                params["username"] = name
+
+    return params

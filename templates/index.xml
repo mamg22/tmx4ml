@@ -4,6 +4,7 @@
     0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list"))),
     1: ("Icons128x128_1:Browse", "Trackpacks", "manialink:{}{}".format(origin, url("trackpack-list"))),
     2: ("Icons128x128_1:Buddies", "Users", "manialink:{}{}".format(origin, url("user-list"))),
+    3: ("Icons64x64_1:IconPlayers", "Leaderboards", "manialink:{}{}".format(origin, url("leaderboards"))),
 }
 %}
 

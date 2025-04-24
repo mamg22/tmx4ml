@@ -220,6 +220,29 @@ async def random_user(request: Request):
         )
 
 
+async def leaderboards(request: Request):
+    session = app["client_session"]
+    params = {
+        "fields": "User.Name,User.UserId,ReplayScore,ReplayWRs,Top10s,Replays,Position,Delta",
+        "count": 17,
+    }
+
+    url = API_URL / "leaderboards"
+
+    if query := request.query.get("query"):
+        params |= query_parser.parse_leaderboard_query(query)
+
+    if after := request.query.get("after"):
+        params["after"] = after
+    if before := request.query.get("before"):
+        params["before"] = before
+
+    async with session.get(url.with_query(params)) as res:
+        results = await res.json()
+
+    return render_manialink("leaderboard.xml", request, {"leaderboard": results})
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -247,6 +270,7 @@ app.add_routes(
         web.get("/user/", user_list, name="user-list"),
         web.get("/user/{userid}", user_details, name="user-details"),
         web.get("/user/random", random_user, name="user-random"),
+        web.get("/leaderboards/", leaderboards, name="leaderboards"),
     ]
 )
 

@@ -1,0 +1,67 @@
+{% set origin = request.url.origin() %}
+
+{% set sidebar_buttons = {
+0: ("Icons128x128_1:LadderPoints", "Standard", "manialink:" ~ request.url.update_query(None)),
+1: ("Icons128x128_1:Forever", "Classic", "manialink:" ~ request.url.update_query(query="lbid:classic")),
+2: ("Icons128x128_1:Nations", "Nadeo", "manialink:" ~ request.url.update_query(query="lbid:nadeo")),
+}
+%}
+
+{% set subtitle = "Leaderboards" %}
+
+{% extends "ui.xml" %}
+
+{% block body %}
+{% call(width, height) titled_box("Leaderboard", BODY_LEFT + 1, 46, 96, 91) %}
+    <quad style="Bgs1" substyle="BgPager" sizen="{{ width }} 4" posn="0 0 2" />
+    <entry textsize="2" textcolor="ffff" posn="2 -1 4" sizen="92 3" name="search_query" default="{{ request.query.query }}"/>
+    <quad style="Icons64x64_1" substyle="Maximize" sizen="4 4" posn="{{ width }} 0 5" halign="right"
+        manialink="./?query=search_query"/>
+
+    <frame posn="0 -6 3">
+        <label style="TextStaticSmall" text="Score" posn="46" sizen="15" halign="right"/>
+        <label style="TextStaticSmall" text="World records" posn="61" sizen="15" halign="right"/>
+        <label style="TextStaticSmall" text="Top 10s" posn="76" sizen="15" halign="right"/>
+        <label style="TextStaticSmall" text="Replays" posn="91" sizen="15" halign="right"/>
+    </frame>
+    <quad style="Bgs1" substyle="BgList" sizen="88 70" posn="5 -8.5 2" />
+    {% for entry in leaderboard.Results -%}
+    <frame posn="0 {{ -9.5 - loop.index0 * 4 }} 3">
+        {% if entry.Position <= 2 %}
+            {% set icon = "First" if entry.Position == 0 else "Second" if entry.Position == 1 else "Third" %}
+            <quad style="Icons64x64_1" substyle="{{ icon }}" sizen="3 3" halign="right" valign="center" posn="5 -2"/>
+        {% else %}
+            <label text="{{ entry.Position + 1 }}" halign="right" posn="4 -1" textcolor="493f" textsize="2"/>
+        {% endif %}
+        <quad style="Bgs1" substyle="BgCardPlayer" sizen="86 4" posn="6 0 1" manialink="{{ origin ~ url('user-details', userid=entry.User.UserId) }}"/>
+        <label posn="8 -1 3" text="{{ entry.User.Name }}" textsize="2" textcolor="000f" sizen="26"/>
+        <label style="TextRaceChrono" text="$222{{ entry.ReplayScore }}" posn="46 -1 2" sizen="20" halign="right" scale="0.45"/>
+        <label style="TextRaceChrono" text="$222{{ entry.ReplayWRs }}" posn="61 -1 2" sizen="15" halign="right" scale="0.45"/>
+        <label style="TextRaceChrono" text="$222{{ entry.Top10s }}" posn="76 -1 2" sizen="15" halign="right" scale="0.45"/>
+        <label style="TextRaceChrono" text="$222{{ entry.Replays }}" posn="91 -1 2" sizen="15" halign="right" scale="0.45"/>
+    </frame>
+    {% endfor %}
+
+    {%- set enable_first = request.query.after or request.query.before -%}
+    {%- set first_attrs = {
+        'substyle': 'ArrowFirst' if enable_first else 'StarGold',
+        'manialink': request.url.update_query({'before': '', 'after': ''}) if enable_first
+    } -%}
+
+    {%- set enable_prev = request.query.after or (request.query.before and leaderboard.More) -%}
+    {%- set prev_attrs = {
+        'substyle': 'ArrowPrev' if enable_prev else 'StarGold',
+        'manialink': request.url.update_query({'before': leaderboard.Results[0].Position, 'after': ''}) if enable_prev
+    } -%}
+
+    {%- set enable_next = request.query.before or leaderboard.More -%}
+    {%- set next_attrs = {
+        'substyle': 'ArrowNext' if enable_next else 'StarGold',
+        'manialink': request.url.update_query({'after': leaderboard.Results[-1].Position, 'before': ''}) if enable_next
+    } -%}
+
+    <quad posn="0 {{ -height + 4 }} 7" sizen="3 3" style="Icons64x64_1" {{ first_attrs | xmlattr }} />
+    <quad posn="{{ width / 2 - 5 }} {{ -height + 4 }} 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ prev_attrs | xmlattr }} />
+    <quad posn="{{ width / 2 + 5 }} {{ -height + 4 }} 7" sizen="3 3" halign="right" style="Icons64x64_1" {{ next_attrs | xmlattr }} />
+{% endcall %}
+{% endblock body %}
