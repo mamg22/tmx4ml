@@ -6,8 +6,11 @@ Manialink frontend server for Trackmania Exchange Classic (TM1X). Allows browsin
 
 * Fetch track lists (only TMNF exchange for now) with pagination.
 * Search and filter tracks with similar queries as the ones used in TMX.
-* View track details and top records.
 * UI design very close to the style used in-game, for a native look and feel.
+* View track details and top records.
+* Browse trackpacks.
+* Find and view users and their tracks.
+* Display leaderboards.
 
 ## Running
 
