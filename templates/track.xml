@@ -118,7 +118,7 @@
     {% endcall %}
     {% call(width, height) titled_box("Author comments", BODY_LEFT + 50, 6, 46, 48) %}
         {% set comment_style = "TextStaticSmall" if track.AuthorComments else "" %}
-        <label text="{{ track.AuthorComments | default('$i$bbb(No text defined)', true) }}"
+        <label text="{{ format_bbcode(track.AuthorComments, origin) | default('$i$bbb(No text defined)', true) | safe }}"
         style="TextStaticSmall" sizen="43 42" posn="0 0 4" autonewline="1" maxline="16"/>
     {% endcall %}
 {% endblock body %}

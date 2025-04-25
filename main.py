@@ -11,6 +11,7 @@ import aiohttp_jinja2
 import jinja2
 import yarl
 
+import bbcode_tmx
 import query_parser
 import tmx
 
@@ -23,6 +24,7 @@ aiohttp_jinja2.setup(
 
 jinja_env = aiohttp_jinja2.get_env(app)
 jinja_env.globals["tmx"] = tmx
+jinja_env.globals["format_bbcode"] = bbcode_tmx.format_bbcode
 
 
 BASE_URL = yarl.URL("https://tmnf.exchange")
@@ -261,9 +263,9 @@ app.cleanup_ctx.append(client_session_ctx)
 app.add_routes(
     [
         web.get("/", index, name="index"),
-        web.get("/tracks/", track_list, name="track-list"),
-        web.get("/tracks/random", random_track, name="track-random"),
-        web.get("/tracks/{trackid}", track_details, name="track-details"),
+        web.get("/track/", track_list, name="track-list"),
+        web.get("/track/random", random_track, name="track-random"),
+        web.get("/track/{trackid}", track_details, name="track-details"),
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
