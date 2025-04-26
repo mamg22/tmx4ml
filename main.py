@@ -163,6 +163,26 @@ async def trackpack_list(request: Request):
     return render_manialink("trackpacks.xml", request, {"trackpacks": results})
 
 
+async def random_trackpack(request: Request):
+    session = app["client_session"]
+
+    async with session.get(BASE_URL / "trackpackrandom", allow_redirects=False) as res:
+        location = res.headers["location"]
+        packid = location.split("/")[-1]
+
+        return render_manialink(
+            "redirect.xml",
+            request,
+            {
+                "target": request.url.origin().join(
+                    app.router["track-list"]
+                    .url_for()
+                    .with_query(query="packid:" + packid)
+                )
+            },
+        )
+
+
 async def user_list(request: Request):
     session = app["client_session"]
     params = {
@@ -269,6 +289,7 @@ app.add_routes(
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
+        web.get("/trackpack/random", random_trackpack, name="trackpack-random"),
         web.get("/user/", user_list, name="user-list"),
         web.get("/user/{userid}", user_details, name="user-details"),
         web.get("/user/random", random_user, name="user-random"),
