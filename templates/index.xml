@@ -8,7 +8,28 @@
 }
 %}
 
+{% set subtitle = "Front page" %}
+
 {% extends "ui.xml" %}
 
 {% block body %}
+<label style="TextRankingsBig" text="TrackMania $0c0Nations$g Forever E$d00x$gchange" halign="center" posn="0 46" />
+{% call(width, height) titled_box("Welcome!", BODY_LEFT + 23, 40, 52, 80) %}
+<label style="CardButtonMediumWide" text="Latest tracks" posn="0 -0"
+    manialink="{{ origin ~ url('track-list').with_query(query='in:latestauthor') }}" />
+<label style="CardButtonMediumWide" text="Latest awards" posn="0 -4"
+    manialink="{{ origin ~ url('track-list').with_query(query='in:latestawardedauthor') }}" />
+<label style="CardButtonMediumWide" text="Supporter tracks" posn="0 -8"
+    manialink="{{ origin ~ url('track-list').with_query(query='in:latestauthor,supporter') }}" />
+
+<label style="CardButtonMediumWide" text="Best of the week" posn="0 -16"
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisWeekDesc') }}" />
+<label style="CardButtonMediumWide" text="Best of the month" posn="0 -20"
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisMonthDesc') }}" />
+<label style="CardButtonMediumWide" text="All-time favorites" posn="0 -24"
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardCountDesc') }}" />
+
+<label style="CardButtonMediumWide" text="Latest trackpacks" posn="0 -32"
+    manialink="{{ origin ~ url('trackpack-list') }}" />
+{% endcall %}
 {% endblock body %}
