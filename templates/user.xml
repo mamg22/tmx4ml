@@ -12,7 +12,7 @@
     query='order1:commentcountdesc author:' ~ quoted_name))),
 5: ("Icons64x64_1:Outbox", "Comments Given", "manialink:{}{}".format(origin, url("track-list").with_query(
     query='order1:personalawardsetdesc commentedby:' ~ quoted_name))),
-7: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/usershow/{}".format(user.UserId)),
+8: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/usershow/{}".format(user.UserId)),
 } %}
 
 {% set subtitle = "User details" %}
