@@ -33,18 +33,6 @@ API_URL = BASE_URL / "api"
 TRACK_LIST_FIELDS = "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty"
 
 
-async def fetch_track_list(params: Mapping[str, str]):
-    url = (API_URL / "tracks").with_query(params)
-
-    session = app["client_session"]
-    async with session.get(url) as res:
-        text = await res.text()
-
-        query_res = json.loads(text)
-
-    return query_res
-
-
 def render_manialink(*args, **kwargs):
     response = aiohttp_jinja2.render_template(*args, **kwargs)
     response.content_type = "application/xml"
@@ -52,6 +40,7 @@ def render_manialink(*args, **kwargs):
 
 
 async def track_list(request: Request):
+    session = app["client_session"]
     params = {
         "count": "10",
         "fields": TRACK_LIST_FIELDS,
@@ -65,9 +54,12 @@ async def track_list(request: Request):
     if before := request.query.get("before"):
         params["before"] = before
 
-    res = await fetch_track_list(params)
+    url = (API_URL / "tracks").with_query(params)
 
-    return render_manialink("tracks.xml", request, {"tracks": res})
+    async with session.get(url) as res:
+        tracks = await res.json()
+
+    return render_manialink("tracks.xml", request, {"tracks": tracks})
 
 
 async def track_image(request: Request):
