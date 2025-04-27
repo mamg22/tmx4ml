@@ -30,8 +30,6 @@ jinja_env.globals["format_bbcode"] = bbcode_tmx.format_bbcode
 BASE_URL = yarl.URL("https://tmnf.exchange")
 API_URL = BASE_URL / "api"
 
-TRACK_LIST_FIELDS = "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty"
-
 
 def render_manialink(*args, **kwargs):
     response = aiohttp_jinja2.render_template(*args, **kwargs)
@@ -43,7 +41,7 @@ async def track_list(request: Request):
     session = app["client_session"]
     params = {
         "count": "10",
-        "fields": TRACK_LIST_FIELDS,
+        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty",
     }
 
     if query := request.query.get("query"):
