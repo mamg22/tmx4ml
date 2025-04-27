@@ -163,6 +163,29 @@ async def trackpack_list(request: Request):
     return render_manialink("trackpacks.xml", request, {"trackpacks": results})
 
 
+async def trackpack_details(request: Request):
+    packid = request.match_info["packid"]
+    session = app["client_session"]
+
+    params = {
+        "id": packid,
+        "fields": "PackId,PackName,Tracks,PackValue,IsLegacy,Downloads,CreatedAt,UpdatedAt,"
+        "Creator.UserId,Creator.Name,AllowsTrackSubmissions",
+        "count": 1,
+    }
+
+    url = API_URL / "trackpacks"
+
+    async with session.get(url.with_query(params)) as res:
+        pack = await res.json()
+
+    return render_manialink(
+        "trackpack.xml",
+        request,
+        {"pack": pack["Results"][0]},
+    )
+
+
 async def random_trackpack(request: Request):
     session = app["client_session"]
 
@@ -175,9 +198,7 @@ async def random_trackpack(request: Request):
             request,
             {
                 "target": request.url.origin().join(
-                    app.router["track-list"]
-                    .url_for()
-                    .with_query(query="packid:" + packid)
+                    app.router["trackpack-details"].url_for(packid=packid)
                 )
             },
         )
@@ -289,6 +310,7 @@ app.add_routes(
         web.get("/image/{trackid}.jpg", track_image, name="track-image"),
         web.get("/play/{trackid}", play_track, name="track-play"),
         web.get("/trackpack/", trackpack_list, name="trackpack-list"),
+        web.get("/trackpack/{packid}", trackpack_details, name="trackpack-details"),
         web.get("/trackpack/random", random_trackpack, name="trackpack-random"),
         web.get("/user/", user_list, name="user-list"),
         web.get("/user/{userid}", user_details, name="user-details"),

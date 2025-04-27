@@ -1,0 +1,52 @@
+
+{% set origin = request.url.origin() %}
+
+{% set sidebar_buttons = {
+0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="packid:" ~ pack.PackId))),
+1: ("Icons128x128_1:Rankings", "Leaderboard", "manialink:{}{}".format(origin, url("leaderboards").with_query(query="lbid:" ~ pack.PackId))),
+8: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/trackpackshow/" ~ pack.PackId),
+} %}
+
+{% set subtitle = "Trackpack details" %}
+
+{% extends "ui.xml" %}
+
+{% block body %}
+    {% call(width, height) titled_box(pack.PackName, BODY_LEFT + 24, 36, 48, 12) %}
+        <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="0 -0 4" sizen="4 4" />
+        <label text="{{ pack.Creator.Name }}" posn="5 -1 4" sizen="{{ width - 5 }} 3" />
+    {% endcall %}
+
+    {% call(width, height) titled_box("Statistics", BODY_LEFT + 35.5, 20, 25, 22) %}
+        <quad style="Icons128x128_1" substyle="Challenge" posn="0 -0 4" sizen="4 4" />
+        <label text="{{ pack.Tracks }}" posn="{{ width }} -0.5 4" sizen="{{ width - 5 }} 3" halign="right" />
+
+        <quad style="Icons128x128_1" substyle="LadderPoints" posn="0 -5 4" sizen="4 4" />
+        <label text="{{ pack.PackValue }}" posn="{{ width }} -5.5 4" sizen="{{ width - 5 }} 3" halign="right" />
+
+        <quad style="Icons128x128_1" substyle="Download" posn="0 -10 4" sizen="4 4" />
+        <label text="{{ pack.Downloads }}" posn="{{ width }} -10.5 4" sizen="{{ width - 5 }} 3" halign="right" />
+    {% endcall %}
+    {% call(width, height) titled_box("Details", BODY_LEFT + 24, -6, 48, 19) %}
+        <frame posn="0 0 4">
+            <label text="ID" style="TextStaticSmall" posn="0 -0"/>
+            <label text="#" style="TextStaticSmall" posn="20 -0" halign="right"/>
+            <entry default="{{ pack.PackId }}" style="TextStaticSmall" posn="20 -0"/>
+
+            <label text="Created" style="TextStaticSmall" posn="0 -3"/>
+            <label text="{{ pack.CreatedAt }}" style="TextStaticSmall" posn="20 -3"/>
+
+            <label text="Updated" style="TextStaticSmall" posn="0 -6"/>
+            <label text="{{ pack.UpdatedAt }}" style="TextStaticSmall" posn="20 -6"/>
+
+            <label text="Allows submissions" style="TextStaticSmall" posn="0 -9"/>
+            <label text="{{ 'Yes' if pack.AllowsTrackSubmissions else 'No' }}" style="TextStaticSmall" posn="20 -9"/>
+        </frame>
+    {% endcall %}
+    {% if pack.IsLegacy %}
+    {% call(width, height) titled_box("Legacy trackpack", BODY_LEFT + 20, -28, 56, 13) %}
+    <label text="This trackpack and was created with the legacy system.{{ '\n' }}Some tracks of the pack might not be uploaded on TMX."
+            sizen="{{ width }} {{ height }}" autonewline="1" textsize="2" textcolor="f77f"/>
+    {% endcall %}
+    {% endif %}
+{% endblock body %}
