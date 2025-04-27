@@ -148,6 +148,8 @@ def parse_trackpack_query(query: str) -> dict[str, str]:
             case ["order1" | "order2" as order, order_name]:
                 order_type = find_member(tmx.TrackpackSearchOrder, order_name)
                 params[order] = str(order_type.value)
+            case ["trackid", trackid]:
+                params["trackid"] = trackid
             case [text]:
                 try:
                     params["name"] += f" {text}"

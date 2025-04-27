@@ -2,7 +2,8 @@
 
 {% set sidebar_buttons = {
     0: ("Icons64x64_1:MediaPlay", "Play", "manialink:{}{}".format(origin, url('track-play', trackid=track.TrackId))),
-    1: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/trackshow/{}".format(track.TrackId)),
+    1: ("Icons128x128_1:Browse", "Trackpacks including", "manialink:{}{}".format(origin, url('trackpack-list').with_query(query="trackid:" ~ track.TrackId))),
+    8: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/trackshow/{}".format(track.TrackId)),
 } %}
 
 {% set subtitle = "Track details" %}
