@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import asyncio
-from collections.abc import Mapping
-import json
 
 import aiohttp
 from aiohttp import web
