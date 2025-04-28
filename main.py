@@ -265,6 +265,10 @@ async def leaderboards(request: Request):
     return render_manialink("leaderboard.xml", request, {"leaderboard": results})
 
 
+async def home(request: Request):
+    return render_manialink("home.xml", request, {})
+
+
 async def index(request: Request):
     return render_manialink("index.xml", request, {})
 
@@ -272,14 +276,16 @@ async def index(request: Request):
 async def client_session_ctx(app: web.Application):
     session = aiohttp.ClientSession()
     app["client_session"] = session
+    for subapp in app._subapps:
+        subapp["client_session"] = session
 
     yield
 
     await session.close()
 
 
-routes = [
-    web.get("/", index, name="index"),
+common_routes = [
+    web.get("/", home, name="home"),
     web.get("/track/", track_list, name="track-list"),
     web.get("/track/random", random_track, name="track-random"),
     web.get("/track/{trackid}", track_details, name="track-details"),
@@ -294,12 +300,10 @@ routes = [
     web.get("/leaderboards/", leaderboards, name="leaderboards"),
 ]
 
+root_routes = [web.get("/", index, name="index")]
 
-def init_app():
-    app = web.Application()
 
-    app.cleanup_ctx.append(client_session_ctx)
-
+def setup_jinja2(app: web.Application):
     aiohttp_jinja2.setup(
         app,
         loader=jinja2.FileSystemLoader("templates"),
@@ -310,13 +314,29 @@ def init_app():
     jinja_env.globals["tmx"] = tmx
     jinja_env.globals["format_bbcode"] = bbcode_tmx.format_bbcode
 
-    site = "tmnf"
-    app.add_routes(routes)
-    app["site"] = site
 
-    base_url = yarl.URL(f"https://{site}.exchange")
-    app["base_url"] = base_url
-    app["api_url"] = base_url / "api"
+def init_app():
+    app = web.Application()
+
+    app.add_routes(root_routes)
+
+    app.cleanup_ctx.append(client_session_ctx)
+
+    setup_jinja2(app)
+
+    for site in ("tmnf", "tmuf"):
+        subapp = web.Application()
+        subapp.add_routes(common_routes)
+        subapp["site"] = site
+
+        base_url = yarl.URL(f"https://{site}.exchange")
+        subapp["base_url"] = base_url
+        subapp["api_url"] = base_url / "api"
+
+        setup_jinja2(subapp)
+
+        app.add_subapp("/" + site, subapp)
+        app[site] = subapp
 
     return app
 

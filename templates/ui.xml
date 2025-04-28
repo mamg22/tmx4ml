@@ -19,14 +19,14 @@
 
     {# Sidebar + Sidebar title space #}
     <quad sizen="30 96" posn="-64 48 1" style="Bgs1" substyle="BgWindow1"/>
-    <quad sizen="29 7" posn="-63.5 47.5 2" style="Bgs1" substyle="BgTitlePage" manialink="{{ request.url.origin() }}"/>
+    <quad sizen="29 7" posn="-63.5 47.5 2" style="Bgs1" substyle="BgTitlePage"/>
 
     {# Title and subtitle #}
-    <label style="TextRankingsBig" text="$iTMNF-$d00X" posn="-62.5 46.5 3" textcolor="ffff"/>
-    <label style="TextSubTitle1" text="{{ subtitle | default('TMNF-$d00X') }}" posn="-62 43 3" textcolor="ffff"/>
+    <label style="TextRankingsBig" text="$i{{ app['site'] | default('TM') | upper }}-$d00X" posn="-62.5 46.5 3" textcolor="ffff"/>
+    <label style="TextSubTitle1" text="{{ subtitle }}" posn="-62 43 3" textcolor="ffff"/>
 
     {# Sidebar buttons #}
-    {% for position, button_def in sidebar_buttons | default({}) | dictsort if position in range(9) %}
+    {% for position, button_def in sidebar_buttons | default({}) | dictsort if position in range(9) and button_def %}
         {% set icon, label, link = button_def %}
         {% set style, substyle = icon.split(":", 1) %}
         {% set link_type, link_target = link.split(":", 1) %}
@@ -37,6 +37,8 @@
             <label sizen="20 10" posn="8 -4 1" valign="center" text="{{ label }}" style="TextButtonNav" />
         </frame>
     {% endfor %}
+
+    {# Navigation #}
 
     {# Refresh button #}
     <quad posn="64 -48 128" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="Refresh" manialink="{{ request.url }}"/>

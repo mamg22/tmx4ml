@@ -4,7 +4,7 @@
 {% set sidebar_buttons = {
 0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="packid:" ~ pack.PackId))),
 1: ("Icons128x128_1:Rankings", "Leaderboard", "manialink:{}{}".format(origin, url("leaderboards").with_query(query="lbid:" ~ pack.PackId))),
-8: ("Icons64x64_1:Windowed", "Open in browser", "url:https://tmnf.exchange/trackpackshow/" ~ pack.PackId),
+8: ("Icons64x64_1:Windowed", "Open in browser", "url:{}/trackpackshow/{}".format(app["base_url"], pack.PackId)),
 } %}
 
 {% set subtitle = "Trackpack details" %}

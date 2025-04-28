@@ -4,6 +4,7 @@
 0: ("Icons128x128_1:LadderPoints", "Standard", "manialink:" ~ request.url.update_query(None)),
 1: ("Icons128x128_1:Forever", "Classic", "manialink:" ~ request.url.update_query(query="lbid:classic")),
 2: ("Icons128x128_1:Nations", "Nadeo", "manialink:" ~ request.url.update_query(query="lbid:nadeo")),
+3: ("Icons128x128_1:CustomStars", "Star", "manialink:" ~ request.url.update_query(query="lbid:star")) if app["site"] == "tmuf",
 }
 %}
 
