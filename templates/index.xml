@@ -6,7 +6,7 @@
 }
 %}
 
-{% set subtitle = "Front page" %}
+{% set subtitle = "Choose an activity" %}
 
 {% extends "ui.xml" %}
 
