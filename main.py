@@ -4,6 +4,7 @@ import asyncio
 
 import aiohttp
 from aiohttp import web
+from aiohttp.typedefs import Handler
 from aiohttp.web_request import Request
 import aiohttp_jinja2
 import jinja2
@@ -284,6 +285,24 @@ async def client_session_ctx(app: web.Application):
     await session.close()
 
 
+@web.middleware
+async def handle_redirects(request: Request, handler: Handler):
+    try:
+        response = await handler(request)
+        return response
+    except (
+        web.HTTPMultipleChoices,
+        web.HTTPMovedPermanently,
+        web.HTTPFound,
+        web.HTTPSeeOther,
+        web.HTTPUseProxy,
+        web.HTTPTemporaryRedirect,
+    ) as redir:
+        target = request.url.origin().join(yarl.URL(redir.location))
+
+        return render_manialink("redirect.xml", request, {"target": target})
+
+
 common_routes = [
     web.get("/", home, name="home"),
     web.get("/track/", track_list, name="track-list"),
@@ -316,7 +335,7 @@ def setup_jinja2(app: web.Application):
 
 
 def init_app():
-    app = web.Application()
+    app = web.Application(middlewares=[handle_redirects])
 
     app.add_routes(root_routes)
 
