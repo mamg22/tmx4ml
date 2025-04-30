@@ -215,6 +215,9 @@ def parse_leaderboard_query(query: str) -> dict[str, str]:
                     params["lbid"] = str(lb_type.value)
                 except KeyError:
                     params["lbid"] = lb_id
+            case ["order1" as order, order_name]:
+                order_type = find_member(tmx.LeaderboardSearchOrder, order_name)
+                params[order] = str(order_type.value)
             case [name]:
                 params["username"] = name
 

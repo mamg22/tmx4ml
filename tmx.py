@@ -47,6 +47,15 @@ class Leaderboard(StringableEnum):
     Star = 5
 
 
+class LeaderboardSearchOrder(Enum):
+    ReplayCountAsc = 3
+    ReplayCountDesc = 4
+    WorldRecordCountAsc = 5
+    WorldRecordCountDesc = 6
+    Top10CountAsc = 7
+    Top10CountDesc = 8
+
+
 class Mood(StringableEnum):
     Sunrise = 0
     Day = 1
