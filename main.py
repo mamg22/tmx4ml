@@ -73,7 +73,7 @@ async def track_details(request: Request):
         replay_query = {
             "trackId": trackid,
             "best": 1,
-            "fields": "User.Name,ReplayTime,Position",
+            "fields": "ReplayId,User.Name,ReplayTime,Position",
         }
         replay_url = (request.app["api_url"] / "replays").with_query(replay_query)
         replay_task = tg.create_task(session.get(replay_url))
@@ -117,6 +117,12 @@ async def random_track(request: Request):
                 )
             },
         )
+
+
+async def view_replay(request: Request):
+    replayid = request.match_info["replayid"]
+
+    return render_manialink("replay.xml", request, {"replayid": replayid})
 
 
 async def trackpack_list(request: Request):
@@ -310,6 +316,7 @@ common_routes = [
     web.get("/track/{trackid}", track_details, name="track-details"),
     web.get("/image/{trackid}.jpg", track_image, name="track-image"),
     web.get("/play/{trackid}", play_track, name="track-play"),
+    web.get("/replay/{replayid}", view_replay, name="replay-view"),
     web.get("/trackpack/", trackpack_list, name="trackpack-list"),
     web.get("/trackpack/{packid}", trackpack_details, name="trackpack-details"),
     web.get("/trackpack/random", random_trackpack, name="trackpack-random"),

@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<maniacode noconfirmation="1">
+    <view_replay>
+        <name>Replay-{{ replayid }}</name>
+        <url>{{ app["base_url"] }}/recordgbx/{{ replayid }}</url>
+    </view_replay>
+</maniacode>
+<timeout>0</timeout>
