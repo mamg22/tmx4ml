@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import asyncio
+from datetime import datetime, timezone
+from functools import partial
+import json
+from typing import Any
 
 import aiohttp
 from aiohttp import web
@@ -21,6 +25,43 @@ def render_manialink(*args, **kwargs):
     return response
 
 
+SIMPLE_JSON_FIELDS = {
+    "Difficulty": tmx.Difficulty,
+    "Routes": tmx.Route,
+    "Style": tmx.TrackTag,
+    "Mood": tmx.Mood,
+    "Environment": tmx.Environment,
+    "Car": tmx.Vehicle,
+    "ReplayType": tmx.Leaderboard,
+    "PrimaryType": tmx.TrackType,
+    "UnlimiterVersion": tmx.UnlimiterVersion,
+}
+
+
+def handle_tmx_json(obj: dict[str, Any]) -> dict[str, Any]:
+    for key, value in filter(lambda pair: pair[1] is not None, obj.items()):
+        match key:
+            case (
+                "UploadedAt"
+                | "UpdatedAt"
+                | "ActivityAt"
+                | "CreatedAt"
+                | "TrackAt"
+                | "ReplayAt"
+                | "RegisteredAt"
+            ):
+                obj[key] = datetime.fromisoformat(value).replace(tzinfo=timezone.utc)
+            case "Tags":
+                obj[key] = [tmx.TrackTag(tag) for tag in value]
+            case simple if simple in SIMPLE_JSON_FIELDS:
+                obj[key] = SIMPLE_JSON_FIELDS[simple](value)
+
+    return obj
+
+
+json_loader = partial(json.loads, object_hook=handle_tmx_json)
+
+
 async def track_list(request: Request):
     session = request.app["client_session"]
     params = {
@@ -39,7 +80,7 @@ async def track_list(request: Request):
     url = (request.app["api_url"] / "tracks").with_query(params)
 
     async with session.get(url) as res:
-        tracks = await res.json()
+        tracks = await res.json(loads=json_loader)
 
     return render_manialink("tracks.xml", request, {"tracks": tracks})
 
@@ -78,8 +119,8 @@ async def track_details(request: Request):
         replay_url = (request.app["api_url"] / "replays").with_query(replay_query)
         replay_task = tg.create_task(session.get(replay_url))
 
-    track = await track_task.result().json()
-    replays = await replay_task.result().json()
+    track = await track_task.result().json(loads=json_loader)
+    replays = await replay_task.result().json(loads=json_loader)
 
     return render_manialink(
         "track.xml",
@@ -140,7 +181,7 @@ async def trackpack_list(request: Request):
         params["before"] = before
 
     async with session.get(url.with_query(params)) as res:
-        results = await res.json()
+        results = await res.json(loads=json_loader)
 
     return render_manialink("trackpacks.xml", request, {"trackpacks": results})
 
@@ -159,7 +200,7 @@ async def trackpack_details(request: Request):
     url = request.app["api_url"] / "trackpacks"
 
     async with session.get(url.with_query(params)) as res:
-        pack = await res.json()
+        pack = await res.json(loads=json_loader)
 
     return render_manialink(
         "trackpack.xml",
@@ -206,7 +247,7 @@ async def user_list(request: Request):
         params["before"] = before
 
     async with session.get(url.with_query(params)) as res:
-        results = await res.json()
+        results = await res.json(loads=json_loader)
 
     return render_manialink("users.xml", request, {"users": results})
 
@@ -225,7 +266,7 @@ async def user_details(request: Request):
     url = request.app["api_url"] / "users"
 
     async with session.get(url.with_query(params)) as res:
-        user = await res.json()
+        user = await res.json(loads=json_loader)
 
     return render_manialink("user.xml", request, {"user": user["Results"][0]})
 
@@ -267,7 +308,7 @@ async def leaderboards(request: Request):
         params["before"] = before
 
     async with session.get(url.with_query(params)) as res:
-        results = await res.json()
+        results = await res.json(loads=json_loader)
 
     return render_manialink("leaderboard.xml", request, {"leaderboard": results})
 
