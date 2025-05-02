@@ -43,6 +43,12 @@
     {# Refresh button #}
     <quad posn="64 -48 128" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="Refresh" manialink="{{ request.url }}"/>
 
+    {% if app['site'] %}
+    {# Home page button #}
+    <quad posn="61 -48 128" sizen="3 3" halign="right" valign="bottom" style="Icons64x64_1" substyle="ManiaLinkHome"
+        manialink="{{ '{}/{}/'.format(origin, app['site']) }}"/>
+    {% endif %}
+
     {# Set some utility variables for the body #}
     {% set BODY_WIDTH = 98 %}
     {% set BODY_HEIGHT = 96 %}
