@@ -46,6 +46,10 @@
         <quad sizen="4 4" halign="left" valign="bottom" posn="1 -13.5 5" style="Icons128x128_1" substyle="{{ difficulty_style }}"/>
         <quad sizen="4 4" halign="left" valign="bottom" posn="4 -13.5 5" style="Icons128x128_1" substyle="{{ track.PrimaryType }}"/>
 
+        {% if track.WRReplay %}
+        <quad sizen="4 4" halign="left" valign="bottom" posn="8 -13.5 5" style="Icons128x128_1" substyle="Replay"/>
+        {% endif %}
+
         <quad sizen="4 4" halign="right" valign="bottom" posn="29.5 -13.5 5" style="Icons64x64_1" substyle="Windowed"
             url="https://tmnf.exchange/trackshow/{{ track.TrackId }}"/>
         <quad sizen="4 4" halign="right" valign="bottom" posn="33.5 -13.5 5" style="Icons64x64_1" substyle="MediaPlay"

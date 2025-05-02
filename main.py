@@ -66,7 +66,7 @@ async def track_list(request: Request):
     session = request.app["client_session"]
     params = {
         "count": "10",
-        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty,PrimaryType,Environment",
+        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty,PrimaryType,Environment,WRReplay.ReplayId",
     }
 
     if query := request.query.get("query"):
