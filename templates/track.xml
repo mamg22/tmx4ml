@@ -13,7 +13,7 @@
 {% block body %}
     {% call(width, height) titled_box(track.TrackName, BODY_LEFT + 1, 44, 48, 48) %}
         <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="-1 -0 4" sizen="3 3" />
-        <label style="TextCardSmallScores2" text="{{ track.Authors | map(attribute='User') | join(', ', attribute='Name')  }}" posn="3 -0.5 4" sizen="44 3" />
+        <label style="TextCardSmallScores2" text="{{ track.Authors | map(attribute='User') | map('format_user', link=True) | join(', ')  }}" posn="3 -0.5 4" sizen="38 3" />
 
         <quad style="Bgs1" substyle="BgIconBorder" posn="-.5 -4 3" sizen="31 31" />
         <quad posn="0 -4.5 4" sizen="30 30" image="{{ origin ~ url('track-image', trackid=track.TrackId) }}"/>

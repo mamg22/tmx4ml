@@ -370,6 +370,23 @@ common_routes = [
 root_routes = [web.get("/", index, name="index")]
 
 
+@jinja2.pass_context
+def format_user(
+    context: jinja2.runtime.Context, user: dict[str, Any], link: bool = False
+) -> str:
+    name = user["Name"]
+
+    if link:
+        origin = context["origin"]
+        app = context["app"]
+        uid = user["UserId"]
+
+        target = origin.join(app.router["user-details"].url_for(userid=str(uid)))
+        return f"$h[{target}]{name}$h"
+    else:
+        return name
+
+
 def setup_jinja2(app: web.Application):
     aiohttp_jinja2.setup(
         app,
@@ -380,6 +397,8 @@ def setup_jinja2(app: web.Application):
     jinja_env = aiohttp_jinja2.get_env(app)
     jinja_env.globals["tmx"] = tmx
     jinja_env.globals["format_bbcode"] = bbcode_tmx.format_bbcode
+
+    jinja_env.filters["format_user"] = format_user
 
 
 def init_app():
