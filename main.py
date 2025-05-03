@@ -387,6 +387,14 @@ def format_user(
         return name
 
 
+@jinja2.pass_context
+def format_bbcode(context: jinja2.runtime.Context, text: str) -> str:
+    app = context["app"]
+    request = context["request"]
+
+    return bbcode_tmx.format_bbcode(text, request.url.origin(), app["site"])
+
+
 def setup_jinja2(app: web.Application):
     aiohttp_jinja2.setup(
         app,
@@ -396,9 +404,9 @@ def setup_jinja2(app: web.Application):
 
     jinja_env = aiohttp_jinja2.get_env(app)
     jinja_env.globals["tmx"] = tmx
-    jinja_env.globals["format_bbcode"] = bbcode_tmx.format_bbcode
 
     jinja_env.filters["format_user"] = format_user
+    jinja_env.filters["format_bbcode"] = format_bbcode
 
 
 def init_app():
