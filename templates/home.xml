@@ -39,4 +39,6 @@
 <label style="CardButtonMediumWide" text="Latest trackpacks" posn="0 -32"
     manialink="{{ origin ~ url('trackpack-list') }}" />
 {% endcall %}
+
+{{ branding(BODY_LEFT + 1, -44) }}
 {% endblock body %}

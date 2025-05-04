@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import asyncio
+from collections.abc import Callable
 from datetime import datetime, timezone
 from functools import partial
 import json
@@ -316,12 +317,11 @@ async def leaderboards(request: Request):
     return render_manialink("leaderboard.xml", request, {"leaderboard": results})
 
 
-async def home(request: Request):
-    return render_manialink("home.xml", request, {})
+def make_simple_handler(template: str) -> Handler:
+    async def handler(request: Request):
+        return render_manialink(template, request, {})
 
-
-async def index(request: Request):
-    return render_manialink("index.xml", request, {})
+    return handler
 
 
 async def client_session_ctx(app: web.Application):
@@ -359,7 +359,7 @@ async def handle_redirects(request: Request, handler: Handler):
 
 
 common_routes = [
-    web.get("/", home, name="home"),
+    web.get("/", make_simple_handler("home.xml"), name="home"),
     web.get("/track/", track_list, name="track-list"),
     web.get("/track/random", random_track, name="track-random"),
     web.get("/track/{trackid}", track_details, name="track-details"),
@@ -375,7 +375,10 @@ common_routes = [
     web.get("/leaderboards/", leaderboards, name="leaderboards"),
 ]
 
-root_routes = [web.get("/", index, name="index")]
+root_routes = [
+    web.get("/", make_simple_handler("index.xml"), name="index"),
+    web.get("/about", make_simple_handler("about.xml"), name="about"),
+]
 
 
 @jinja2.pass_context

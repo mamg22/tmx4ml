@@ -1,0 +1,20 @@
+{% set origin = request.url.origin() -%}
+
+{% set sidebar_buttons = {
+8: ("Icons128x128_1:BackFocusable", "Back", "manialink:{}{}".format(origin, url("index"))),
+}
+%}
+
+{% set subtitle = "About" %}
+
+{% extends "ui.xml" %}
+
+{% block body %}
+<quad style="Bgs1" substyle="BgWindow3" sizen="{{ BODY_WIDTH - 32 }} 50" posn="{{ BODY_LEFT + 16 }} 36 1" />
+<frame posn="{{ BODY_LEFT + 16 + 1 }} 35 3">
+    <label style="TextRankingsBig" text="tm$d00x$g4ml" halign="center" posn="32 -3" />
+    <label style="TextStaticSmall" text="TrackMania E$d00x$gchange for ManiaLinks" halign="center" posn="32 -8" />
+
+    <label text="Source: $lhttps://github.com/mamg22/tmx4ml$l" posn="1 -16"/>
+</frame>
+{% endblock body %}

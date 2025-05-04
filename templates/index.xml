@@ -3,6 +3,7 @@
 {% set sidebar_buttons = {
 0: ("Icons128x128_1:Nations", "Nations", "manialink:{}/tmnf/".format(origin)),
 1: ("Icons128x128_1:United", "United", "manialink:{}/tmuf/".format(origin)),
+8: ("Icons128x128_1:Credits", "About", "manialink:{}{}".format(origin, url("about"))),
 }
 %}
 
@@ -12,4 +13,5 @@
 
 {% block body %}
 <label style="TextRankingsBig" text="TrackMania E$d00x$gchange" halign="center" posn="0 46" />
+{{ branding(BODY_LEFT + 1, -44) }}
 {% endblock body %}
