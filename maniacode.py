@@ -19,9 +19,10 @@ class ManiaCodeElement:
         elem = ET.Element(tag_name)
 
         for tag, value in asdict(self).items():
-            sub_elem = ET.Element(tag)
-            sub_elem.text = value
-            elem.append(sub_elem)
+            if value is not None:
+                sub_elem = ET.Element(tag)
+                sub_elem.text = value
+                elem.append(sub_elem)
 
         return elem
 
@@ -49,6 +50,12 @@ class JoinServer(ManiaCodeElement):
     ip: str | None = None
     login: str | None = None
 
+    def __post_init__(self) -> None:
+        if self.ip is None and self.login is None:
+            raise ValueError("Either `ip` or `login` must be set")
+        elif self.ip is not None and self.login is not None:
+            raise ValueError("Cannot set both `ip` and `login` in JoinServer")
+
 
 @dataclass(frozen=True)
 class InstallSkin(ManiaCodeElement):
@@ -74,6 +81,12 @@ class AddFavourite(ManiaCodeElement):
     ip: str | None = None
     login: str | None = None
 
+    def __post_init__(self) -> None:
+        if self.ip is None and self.login is None:
+            raise ValueError("Either `ip` or `login` must be set")
+        elif self.ip is not None and self.login is not None:
+            raise ValueError("Cannot set both `ip` and `login` in AddFavourite")
+
 
 @dataclass(frozen=True)
 class Goto(ManiaCodeElement):
@@ -90,6 +103,18 @@ class Track(ManiaCodeElement):
 class InstallTrackPack(ManiaCodeElement):
     name: str
     tracks: list[Track]
+
+    def serialize(self):
+        tag_name = camel_to_snake_case(self.__class__.__name__)
+        elem = ET.Element(tag_name)
+
+        name_elem = ET.Element("name")
+        name_elem.text = self.name
+        elem.append(name_elem)
+
+        elem.extend(track.serialize() for track in self.tracks)
+
+        return elem
 
 
 def make_maniacode(
