@@ -15,6 +15,7 @@ import jinja2
 import yarl
 
 import bbcode_tmx
+import maniacode as mc
 import query_parser
 import tmx
 
@@ -162,8 +163,11 @@ async def random_track(request: Request):
 
 async def view_replay(request: Request):
     replayid = request.match_info["replayid"]
+    name = "Replay-" + replayid
+    url = str(request.app["base_url"] / "recordgbx" / replayid)
 
-    return render_manialink("replay.xml", request, {"replayid": replayid})
+    text = mc.render_maniacode([mc.ViewReplay(name, url)], noconfirmation=True)
+    return web.Response(text=text, content_type="application/xml")
 
 
 async def trackpack_list(request: Request):
