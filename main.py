@@ -137,8 +137,7 @@ async def play_track(request: Request):
     async with session.get(
         request.app["base_url"].joinpath("trackplay", trackid), allow_redirects=False
     ) as res:
-        location = res.headers["location"]
-        return render_manialink("redirect.xml", request, {"target": location})
+        raise web.HTTPFound(res.headers["location"])
 
 
 async def random_track(request: Request):
@@ -349,7 +348,12 @@ async def handle_redirects(request: Request, handler: Handler):
         web.HTTPUseProxy,
         web.HTTPTemporaryRedirect,
     ) as redir:
-        target = request.url.origin().join(yarl.URL(redir.location))
+        location = yarl.URL(redir.location)
+
+        if location.scheme != "tmtp":
+            target = request.url.origin().join(yarl.URL(redir.location))
+        else:
+            target = redir.location
 
         return render_manialink("redirect.xml", request, {"target": target})
 
