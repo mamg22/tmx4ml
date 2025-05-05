@@ -14,7 +14,7 @@ Manialink frontend server for Trackmania Exchange Classic (TM1X). Allows browsin
 
 ## Running
 
-Clone or download this project, install dependencies and run the `main.py` script. It will start a server listening on port `8000` for all interfaces `0.0.0.0`. For a list of dependencies to manually install, check the `pyproject.toml` file.
+Clone or download this project, install dependencies and run the `main.py` script. It will start a server listening on port `8080` for all interfaces `0.0.0.0`. For a list of dependencies to manually install, check the `pyproject.toml` file.
 
 Using `uv` is recommended to allow easy dependency management and for running the program:
 
@@ -23,4 +23,4 @@ $ uv sync
 $ uv run main.py
 ```
 
-Once the server is running, open up `http://localhost:8000/` in the manialink browser.
+Once the server is running, open up `http://localhost:8080/` in the manialink browser.
