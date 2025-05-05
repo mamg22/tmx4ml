@@ -97,10 +97,10 @@
             <entry default="{{ track.TrackId }}" style="TextStaticSmall" posn="10 -0"/>
 
             <label text="Uploaded" style="TextStaticSmall" posn="0 -3"/>
-            <label text="{{ track.UploadedAt }}" style="TextStaticSmall" posn="10 -3"/>
+            <label text="{{ track.UploadedAt | format_datetime }}" style="TextStaticSmall" posn="10 -3"/>
 
             <label text="Updated" style="TextStaticSmall" posn="0 -6"/>
-            <label text="{{ track.UpdatedAt }}" style="TextStaticSmall" posn="10 -6"/>
+            <label text="{{ track.UpdatedAt | format_datetime }}" style="TextStaticSmall" posn="10 -6"/>
 
             {% if track.UnlimiterVersion %}
                 <label text="Unlimiter" style="TextStaticSmall" posn="0 -9"/>

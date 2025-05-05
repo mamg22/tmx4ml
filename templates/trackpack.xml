@@ -12,7 +12,7 @@
 {% extends "ui.xml" %}
 
 {% block body %}
-    {% call(width, height) titled_box(pack.PackName, BODY_LEFT + 24, 36, 48, 12) %}
+    {% call(width, height) titled_box(pack.PackName, BODY_LEFT + 20, 36, 56, 12) %}
         <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="0 -0 4" sizen="4 4" />
         <label text="{{ pack.Creator.Name }}" posn="5 -1 4" sizen="{{ width - 5 }} 3" />
     {% endcall %}
@@ -27,17 +27,17 @@
         <quad style="Icons128x128_1" substyle="Download" posn="0 -10 4" sizen="4 4" />
         <label text="{{ pack.Downloads }}" posn="{{ width }} -10.5 4" sizen="{{ width - 5 }} 3" halign="right" />
     {% endcall %}
-    {% call(width, height) titled_box("Details", BODY_LEFT + 24, -6, 48, 19) %}
+    {% call(width, height) titled_box("Details", BODY_LEFT + 24, -6, 50, 19) %}
         <frame posn="0 0 4">
             <label text="ID" style="TextStaticSmall" posn="0 -0"/>
             <label text="#" style="TextStaticSmall" posn="20 -0" halign="right"/>
             <entry default="{{ pack.PackId }}" style="TextStaticSmall" posn="20 -0"/>
 
             <label text="Created" style="TextStaticSmall" posn="0 -3"/>
-            <label text="{{ pack.CreatedAt }}" style="TextStaticSmall" posn="20 -3"/>
+            <label text="{{ pack.CreatedAt | format_datetime }}" style="TextStaticSmall" posn="20 -3"/>
 
             <label text="Updated" style="TextStaticSmall" posn="0 -6"/>
-            <label text="{{ pack.UpdatedAt }}" style="TextStaticSmall" posn="20 -6"/>
+            <label text="{{ pack.UpdatedAt | format_datetime }}" style="TextStaticSmall" posn="20 -6"/>
 
             <label text="Allows submissions" style="TextStaticSmall" posn="0 -9"/>
             <label text="{{ 'Yes' if pack.AllowsTrackSubmissions else 'No' }}" style="TextStaticSmall" posn="20 -9"/>

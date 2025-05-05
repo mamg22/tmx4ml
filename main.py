@@ -406,6 +406,10 @@ def format_bbcode(context: jinja2.runtime.Context, text: str) -> str:
     return bbcode_tmx.format_bbcode(text, request.url.origin(), app["site"])
 
 
+def format_datetime(dt: datetime) -> str:
+    return dt.strftime("%F %H:%M:%S%:z")
+
+
 def setup_jinja2(app: web.Application):
     aiohttp_jinja2.setup(
         app,
@@ -418,6 +422,7 @@ def setup_jinja2(app: web.Application):
 
     jinja_env.filters["format_user"] = format_user
     jinja_env.filters["format_bbcode"] = format_bbcode
+    jinja_env.filters["format_datetime"] = format_datetime
 
 
 def init_app():
