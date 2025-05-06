@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 from datetime import datetime
 from typing import Any
 
@@ -144,8 +145,17 @@ def init_app():
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="ManiaLink frontend server for browsing TrackMania Exchange"
+    )
+    parser.add_argument("-p", "--port", type=int, help="Port to bind to. Default: 8080")
+    parser.add_argument("-b", "--bind", help="Host to bind to. Default: 0.0.0.0")
+    parser.add_argument("-s", "--socket", help="Path to a Unix socket to listen on")
+
+    args = parser.parse_args()
+
     app = init_app()
-    web.run_app(app)
+    web.run_app(app, port=args.port, host=args.bind, path=args.socket)
 
 
 if __name__ == "__main__":
