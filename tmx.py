@@ -1,4 +1,6 @@
+from datetime import datetime, timezone
 from enum import Enum
+from typing import Any
 
 
 def format_time(millis: int) -> str:
@@ -208,3 +210,37 @@ class Vehicle(Enum):
 
     def __str__(self) -> str:
         return self.name.removesuffix("Car")
+
+
+SIMPLE_JSON_FIELDS = {
+    "Difficulty": Difficulty,
+    "Routes": Route,
+    "Style": TrackTag,
+    "Mood": Mood,
+    "Environment": Environment,
+    "Car": Vehicle,
+    "ReplayType": Leaderboard,
+    "PrimaryType": TrackType,
+    "UnlimiterVersion": UnlimiterVersion,
+}
+
+
+def handle_tmx_json(obj: dict[str, Any]) -> dict[str, Any]:
+    for key, value in filter(lambda pair: pair[1] is not None, obj.items()):
+        match key:
+            case (
+                "UploadedAt"
+                | "UpdatedAt"
+                | "ActivityAt"
+                | "CreatedAt"
+                | "TrackAt"
+                | "ReplayAt"
+                | "RegisteredAt"
+            ):
+                obj[key] = datetime.fromisoformat(value).replace(tzinfo=timezone.utc)
+            case "Tags":
+                obj[key] = [TrackTag(tag) for tag in value]
+            case simple if simple in SIMPLE_JSON_FIELDS:
+                obj[key] = SIMPLE_JSON_FIELDS[simple](value)
+
+    return obj

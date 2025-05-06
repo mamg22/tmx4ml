@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
-import asyncio
-from collections.abc import Callable
-from datetime import datetime, timezone
-from functools import partial
-import json
+from datetime import datetime
 from typing import Any
 
 import aiohttp
@@ -16,312 +12,8 @@ import jinja2
 import yarl
 
 import bbcode_tmx
-import maniacode as mc
-import query_parser
+import routes as rt
 import tmx
-
-
-def render_manialink(*args, **kwargs):
-    response = aiohttp_jinja2.render_template(*args, **kwargs)
-    response.content_type = "application/xml"
-    return response
-
-
-SIMPLE_JSON_FIELDS = {
-    "Difficulty": tmx.Difficulty,
-    "Routes": tmx.Route,
-    "Style": tmx.TrackTag,
-    "Mood": tmx.Mood,
-    "Environment": tmx.Environment,
-    "Car": tmx.Vehicle,
-    "ReplayType": tmx.Leaderboard,
-    "PrimaryType": tmx.TrackType,
-    "UnlimiterVersion": tmx.UnlimiterVersion,
-}
-
-
-def handle_tmx_json(obj: dict[str, Any]) -> dict[str, Any]:
-    for key, value in filter(lambda pair: pair[1] is not None, obj.items()):
-        match key:
-            case (
-                "UploadedAt"
-                | "UpdatedAt"
-                | "ActivityAt"
-                | "CreatedAt"
-                | "TrackAt"
-                | "ReplayAt"
-                | "RegisteredAt"
-            ):
-                obj[key] = datetime.fromisoformat(value).replace(tzinfo=timezone.utc)
-            case "Tags":
-                obj[key] = [tmx.TrackTag(tag) for tag in value]
-            case simple if simple in SIMPLE_JSON_FIELDS:
-                obj[key] = SIMPLE_JSON_FIELDS[simple](value)
-
-    return obj
-
-
-json_loader = partial(json.loads, object_hook=handle_tmx_json)
-
-
-async def track_list(request: Request):
-    session = request.app["client_session"]
-    params = {
-        "count": "10",
-        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty,PrimaryType,Environment,WRReplay.ReplayId",
-    }
-
-    if query := request.query.get("query"):
-        params |= query_parser.parse_track_query(query)
-
-    if after := request.query.get("after"):
-        params["after"] = after
-    if before := request.query.get("before"):
-        params["before"] = before
-
-    url = (request.app["api_url"] / "tracks").with_query(params)
-
-    async with session.get(url) as res:
-        tracks = await res.json(loads=json_loader)
-
-    return render_manialink("tracks.xml", request, {"tracks": tracks})
-
-
-async def track_image(request: Request):
-    trackid = request.match_info["trackid"]
-    session = request.app["client_session"]
-
-    async with session.get(
-        request.app["base_url"].joinpath("trackshow", trackid, "image", "1")
-    ) as res:
-        response = web.Response(body=(await res.read()))
-        response.content_type = "image/jpeg"
-        return response
-
-
-async def track_details(request: Request):
-    trackid = request.match_info["trackid"]
-    session = request.app["client_session"]
-
-    async with asyncio.TaskGroup() as tg:
-        track_query = {
-            "id": trackid,
-            "count": 1,
-            "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Authors,Difficulty,Routes,Mood,Tags,"
-            "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment,UploadedAt,UpdatedAt,UnlimiterVersion,AuthorComments",
-        }
-        track_url = (request.app["api_url"] / "tracks").with_query(track_query)
-        track_task = tg.create_task(session.get(track_url))
-
-        replay_query = {
-            "trackId": trackid,
-            "best": 1,
-            "fields": "ReplayId,User.Name,ReplayTime,Position",
-        }
-        replay_url = (request.app["api_url"] / "replays").with_query(replay_query)
-        replay_task = tg.create_task(session.get(replay_url))
-
-    track = await track_task.result().json(loads=json_loader)
-    replays = await replay_task.result().json(loads=json_loader)
-
-    return render_manialink(
-        "track.xml",
-        request,
-        {"track": track["Results"][0], "replays": replays},
-    )
-
-
-async def play_track(request: Request):
-    trackid = request.match_info["trackid"]
-    session = request.app["client_session"]
-
-    async with session.get(
-        request.app["base_url"].joinpath("trackplay", trackid), allow_redirects=False
-    ) as res:
-        raise web.HTTPFound(res.headers["location"])
-
-
-async def random_track(request: Request):
-    session = request.app["client_session"]
-
-    async with session.get(
-        request.app["base_url"] / "trackrandom", allow_redirects=False
-    ) as res:
-        location = res.headers["location"]
-        trackid = location.split("/")[-1]
-
-        return render_manialink(
-            "redirect.xml",
-            request,
-            {
-                "target": request.url.origin().join(
-                    request.app.router["track-details"].url_for(trackid=trackid)
-                )
-            },
-        )
-
-
-async def view_replay(request: Request):
-    replayid = request.match_info["replayid"]
-    name = "Replay-" + replayid
-    url = str(request.app["base_url"] / "recordgbx" / replayid)
-
-    text = mc.render_maniacode([mc.ViewReplay(name, url)], noconfirmation=True)
-    return web.Response(text=text, content_type="application/xml")
-
-
-async def trackpack_list(request: Request):
-    session = request.app["client_session"]
-    params = {"fields": "PackId,PackName,Creator.Name,Tracks", "count": 18}
-
-    url = request.app["api_url"] / "trackpacks"
-
-    if query := request.query.get("query"):
-        params |= query_parser.parse_trackpack_query(query)
-
-    if after := request.query.get("after"):
-        params["after"] = after
-    if before := request.query.get("before"):
-        params["before"] = before
-
-    async with session.get(url.with_query(params)) as res:
-        results = await res.json(loads=json_loader)
-
-    return render_manialink("trackpacks.xml", request, {"trackpacks": results})
-
-
-async def trackpack_details(request: Request):
-    packid = request.match_info["packid"]
-    session = request.app["client_session"]
-
-    params = {
-        "id": packid,
-        "fields": "PackId,PackName,Tracks,PackValue,IsLegacy,Downloads,CreatedAt,UpdatedAt,"
-        "Creator.UserId,Creator.Name,AllowsTrackSubmissions",
-        "count": 1,
-    }
-
-    url = request.app["api_url"] / "trackpacks"
-
-    async with session.get(url.with_query(params)) as res:
-        pack = await res.json(loads=json_loader)
-
-    return render_manialink(
-        "trackpack.xml",
-        request,
-        {"pack": pack["Results"][0]},
-    )
-
-
-async def random_trackpack(request: Request):
-    session = request.app["client_session"]
-
-    async with session.get(
-        request.app["base_url"] / "trackpackrandom", allow_redirects=False
-    ) as res:
-        location = res.headers["location"]
-        packid = location.split("/")[-1]
-
-        return render_manialink(
-            "redirect.xml",
-            request,
-            {
-                "target": request.url.origin().join(
-                    request.app.router["trackpack-details"].url_for(packid=packid)
-                )
-            },
-        )
-
-
-async def user_list(request: Request):
-    session = request.app["client_session"]
-    params = {
-        "fields": "UserId,Name,IsSupporter,IsModerator",
-        "count": 18,
-    }
-
-    url = request.app["api_url"] / "users"
-
-    if query := request.query.get("query"):
-        params |= query_parser.parse_user_query(query)
-
-    if after := request.query.get("after"):
-        params["after"] = after
-    if before := request.query.get("before"):
-        params["before"] = before
-
-    async with session.get(url.with_query(params)) as res:
-        results = await res.json(loads=json_loader)
-
-    return render_manialink("users.xml", request, {"users": results})
-
-
-async def user_details(request: Request):
-    session = request.app["client_session"]
-    userid = request.match_info["userid"]
-
-    params = {
-        "id": userid,
-        "fields": "UserId,Name,IsSupporter,IsModerator,RegisteredAt,Tracks,TrackPacks,UserComments,"
-        "TrackCommentsReceived,TrackCommentsGiven,TrackAwardsReceived,TrackAwardsGiven",
-        "count": 1,
-    }
-
-    url = request.app["api_url"] / "users"
-
-    async with session.get(url.with_query(params)) as res:
-        user = await res.json(loads=json_loader)
-
-    return render_manialink("user.xml", request, {"user": user["Results"][0]})
-
-
-async def random_user(request: Request):
-    session = request.app["client_session"]
-
-    async with session.get(
-        request.app["base_url"] / "userrandom", allow_redirects=False
-    ) as res:
-        userid = res.headers["location"].split("/")[-1]
-
-        return render_manialink(
-            "redirect.xml",
-            request,
-            {
-                "target": request.url.origin().join(
-                    request.app.router["user-details"].url_for(userid=userid)
-                )
-            },
-        )
-
-
-async def leaderboards(request: Request):
-    session = request.app["client_session"]
-    params = {
-        "fields": "User.Name,User.UserId,ReplayScore,ReplayWRs,Top10s,Replays,Position,Delta",
-        "count": 17,
-    }
-
-    url = request.app["api_url"] / "leaderboards"
-
-    if query := request.query.get("query"):
-        params |= query_parser.parse_leaderboard_query(query)
-
-    if after := request.query.get("after"):
-        params["after"] = after
-    if before := request.query.get("before"):
-        params["before"] = before
-
-    async with session.get(url.with_query(params)) as res:
-        results = await res.json(loads=json_loader)
-
-    return render_manialink("leaderboard.xml", request, {"leaderboard": results})
-
-
-def make_simple_handler(template: str) -> Handler:
-    async def handler(request: Request):
-        return render_manialink(template, request, {})
-
-    return handler
 
 
 async def client_session_ctx(app: web.Application):
@@ -355,29 +47,29 @@ async def handle_redirects(request: Request, handler: Handler):
         else:
             target = redir.location
 
-        return render_manialink("redirect.xml", request, {"target": target})
+        return rt.render_manialink("redirect.xml", request, {"target": target})
 
 
 common_routes = [
-    web.get("/", make_simple_handler("home.xml"), name="home"),
-    web.get("/track/", track_list, name="track-list"),
-    web.get("/track/random", random_track, name="track-random"),
-    web.get("/track/{trackid}", track_details, name="track-details"),
-    web.get("/image/{trackid}.jpg", track_image, name="track-image"),
-    web.get("/play/{trackid}", play_track, name="track-play"),
-    web.get("/replay/{replayid}", view_replay, name="replay-view"),
-    web.get("/trackpack/", trackpack_list, name="trackpack-list"),
-    web.get("/trackpack/{packid}", trackpack_details, name="trackpack-details"),
-    web.get("/trackpack/random", random_trackpack, name="trackpack-random"),
-    web.get("/user/", user_list, name="user-list"),
-    web.get("/user/{userid}", user_details, name="user-details"),
-    web.get("/user/random", random_user, name="user-random"),
-    web.get("/leaderboards/", leaderboards, name="leaderboards"),
+    web.get("/", rt.make_simple_handler("home.xml"), name="home"),
+    web.get("/track/", rt.track_list, name="track-list"),
+    web.get("/track/random", rt.random_track, name="track-random"),
+    web.get("/track/{trackid}", rt.track_details, name="track-details"),
+    web.get("/image/{trackid}.jpg", rt.track_image, name="track-image"),
+    web.get("/play/{trackid}", rt.play_track, name="track-play"),
+    web.get("/replay/{replayid}", rt.view_replay, name="replay-view"),
+    web.get("/trackpack/", rt.trackpack_list, name="trackpack-list"),
+    web.get("/trackpack/{packid}", rt.trackpack_details, name="trackpack-details"),
+    web.get("/trackpack/random", rt.random_trackpack, name="trackpack-random"),
+    web.get("/user/", rt.user_list, name="user-list"),
+    web.get("/user/{userid}", rt.user_details, name="user-details"),
+    web.get("/user/random", rt.random_user, name="user-random"),
+    web.get("/leaderboards/", rt.leaderboards, name="leaderboards"),
 ]
 
 root_routes = [
-    web.get("/", make_simple_handler("index.xml"), name="index"),
-    web.get("/about", make_simple_handler("about.xml"), name="about"),
+    web.get("/", rt.make_simple_handler("index.xml"), name="index"),
+    web.get("/about", rt.make_simple_handler("about.xml"), name="about"),
 ]
 
 
