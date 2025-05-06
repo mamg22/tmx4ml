@@ -16,6 +16,8 @@ Manialink frontend server for Trackmania Exchange Classic (TM1X). Allows browsin
 
 Clone or download this project, install dependencies and run the `main.py` script. It will start a server listening on port `8080` for all interfaces `0.0.0.0`. For a list of dependencies to manually install, check the `pyproject.toml` file.
 
+For configurtion, pass the `-h`/`--help` flag to the program to check out the available options.
+
 Using `uv` is recommended to allow easy dependency management and for running the program:
 
 ```console
