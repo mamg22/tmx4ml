@@ -1,3 +1,4 @@
+{% extends "ui.xml" %}
 {% set origin = request.url.origin() -%}
 
 {% set sidebar_buttons = {
@@ -7,7 +8,6 @@
 
 {% set subtitle = "About" %}
 
-{% extends "ui.xml" %}
 
 {% block body %}
 <quad style="Bgs1" substyle="BgWindow3" sizen="{{ BODY_WIDTH - 32 }} 50" posn="{{ BODY_LEFT + 16 }} 36 1" />

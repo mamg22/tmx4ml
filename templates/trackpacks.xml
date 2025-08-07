@@ -1,3 +1,4 @@
+{% extends "ui.xml" %}
 {% set origin = request.url.origin() %}
 
 {% set sidebar_buttons = {
@@ -7,7 +8,6 @@
 
 {% set subtitle = "Trackpacks" %}
 
-{% extends "ui.xml" %}
 
 {% block body %}
 {% call(width, height) titled_box("Find trackpacks", BODY_LEFT + 1, 46, 96, 91) %}

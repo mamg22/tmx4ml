@@ -1,3 +1,4 @@
+{% extends "ui.xml" %}
 {% set origin = request.url.origin() %}
 
 {% set sidebar_buttons = {
@@ -8,7 +9,6 @@
 
 {% set subtitle = "Track details" %}
 
-{% extends "ui.xml" %}
 
 {% block body %}
     {% call(width, height) titled_box(track.TrackName, BODY_LEFT + 1, 44, 48, 48) %}

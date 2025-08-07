@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-{%- macro titled_box(title, x, y, width, height, z=0) -%}
+{% macro titled_box(title, x, y, width, height, z=0) -%}
 <frame posn="{{ x }} {{ y }} {{ z }}">
     <quad style="Bgs1" substyle="BgWindow2" sizen="{{ width }} {{ height }}" posn="0 0" />
     <quad style="Bgs1" substyle="BgTitle2" sizen="{{ width - 2 }} 4" posn="1 -1 2" />

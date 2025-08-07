@@ -1,3 +1,4 @@
+{% extends "ui.xml" %}
 {% set origin = request.url.origin() %}
 
 {% set sidebar_buttons = {
@@ -10,7 +11,6 @@
 
 {% set subtitle = "Leaderboards" %}
 
-{% extends "ui.xml" %}
 
 {% block body %}
 {% call(width, height) titled_box("Leaderboard", BODY_LEFT + 1, 46, 96, 91) %}

@@ -1,3 +1,4 @@
+{% extends "ui.xml" %}
 {% set origin = request.url.origin() -%}
 
 {% set sidebar_buttons = {
@@ -9,7 +10,6 @@
 
 {% set subtitle = "Choose an activity" %}
 
-{% extends "ui.xml" %}
 
 {% block body %}
 <label style="TextRankingsBig" text="TrackMania E$d00x$gchange" halign="center" posn="0 46" />
