@@ -2,10 +2,12 @@
 
 import argparse
 from datetime import datetime
+import logging
 from typing import Any
 
 import aiohttp
 from aiohttp import web
+import aiohttp.log
 from aiohttp.typedefs import Handler
 from aiohttp.web_request import Request
 import aiohttp_jinja2
@@ -151,11 +153,16 @@ def main():
     parser.add_argument("-p", "--port", type=int, help="Port to bind to. Default: 8080")
     parser.add_argument("-b", "--bind", help="Host to bind to. Default: 0.0.0.0")
     parser.add_argument("-s", "--socket", help="Path to a Unix socket to listen on")
+    parser.add_argument("-L", "--no-request-logging", dest="request_logging", action="store_false", help="Disable request logging")
 
     args = parser.parse_args()
 
+    logging.basicConfig(level=logging.DEBUG)
+
+    access_log = aiohttp.log.access_logger if args.request_logging else None
+
     app = init_app()
-    web.run_app(app, port=args.port, host=args.bind, path=args.socket)
+    web.run_app(app, port=args.port, host=args.bind, path=args.socket, access_log=access_log)
 
 
 if __name__ == "__main__":
