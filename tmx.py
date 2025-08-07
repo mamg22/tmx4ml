@@ -147,6 +147,12 @@ class TrackTag(StringableEnum):
     PressForward = 10
     Trial = 11
     Grass = 12
+    Story = 13
+    Nascar = 14
+    Speedfun = 15
+    Endurance = 16
+    AlteredNadeo = 17
+    Transitional = 18
 
 
 class TrackType(StringableEnum):
