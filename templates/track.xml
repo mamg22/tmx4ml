@@ -56,14 +56,14 @@
             <frame posn="0 -32">
                 {% set lb_type = track.ReplayType %}
             {% set lb_style, lb_substyle = {
-                tmx.Leaderboard.Standard:      "Icons128x128_1:LadderPoints",
-                tmx.Leaderboard.Classic:       "Icons128x128_1:Forever",
-                tmx.Leaderboard.Nadeo:         "Icons128x128_1:Nations",
-                tmx.Leaderboard.Uncompetitive: "Icons64x64_1:QuitRace",
-                tmx.Leaderboard.Beta:          "Icons128x128_1:Nations",
-                tmx.Leaderboard.Star:          "BgRaceScore2:Fame",
+                tmx.ReplayType.Standard:      "Icons128x128_1:LadderPoints",
+                tmx.ReplayType.Classic:       "Icons128x128_1:Forever",
+                tmx.ReplayType.Nadeo:         "Icons128x128_1:Nations",
+                tmx.ReplayType.Uncompetitive: "Icons64x64_1:QuitRace",
+                tmx.ReplayType.Beta:          "Icons128x128_1:Nations",
+                tmx.ReplayType.Star:          "BgRaceScore2:Fame",
             }[lb_type].split(":", 1) %}
-                {% set lb_text = track.TrackValue if lb_type == tmx.Leaderboard.Standard else lb_type.name %}
+                {% set lb_text = track.TrackValue if lb_type == tmx.ReplayType.Standard else lb_type.name %}
                 <quad style="{{ lb_style }}" substyle="{{ lb_substyle }}" posn="0 0 4" sizen="3 3" />
                 <label style="TextCardSmallScores2" text="{{ lb_text }}" posn="13 -0.5 4" sizen="10 3" halign="right" />
             </frame>
