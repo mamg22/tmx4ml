@@ -28,15 +28,17 @@
     manialink="{{ origin ~ url('track-list').with_query(query='in:latestawardedauthor') }}" />
 <label style="CardButtonMediumWide" text="Supporter tracks" posn="0 -8"
     manialink="{{ origin ~ url('track-list').with_query(query='in:latestauthor,supporter') }}" />
+<label style="CardButtonMediumWide" text="Active competitive tracks" posn="0 -12"
+    manialink="{{ origin ~ url('track-list').with_query(query='value:15000... order1:ActivityDesc') }}" />
 
-<label style="CardButtonMediumWide" text="Best of the week" posn="0 -16"
+<label style="CardButtonMediumWide" text="Best of the week" posn="0 -20"
     manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisWeekDesc') }}" />
-<label style="CardButtonMediumWide" text="Best of the month" posn="0 -20"
+<label style="CardButtonMediumWide" text="Best of the month" posn="0 -24"
     manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisMonthDesc') }}" />
-<label style="CardButtonMediumWide" text="All-time favorites" posn="0 -24"
+<label style="CardButtonMediumWide" text="All-time favorites" posn="0 -28"
     manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsDesc') }}" />
 
-<label style="CardButtonMediumWide" text="Latest trackpacks" posn="0 -32"
+<label style="CardButtonMediumWide" text="Latest trackpacks" posn="0 -36"
     manialink="{{ origin ~ url('trackpack-list') }}" />
 {% endcall %}
 
