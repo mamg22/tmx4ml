@@ -79,6 +79,9 @@ def parse_track_query(query: str) -> dict[str, str]:
                         "latestauthor",
                         "latestawardedauthor",
                         "screenshot",
+                        "collaborative",
+                        "featured",
+                        "beta",
                     ):
                         raise ValueError(collection)
 
@@ -127,6 +130,13 @@ def parse_track_query(query: str) -> dict[str, str]:
                     params["uploadedbefore"] = end
             case ["vehicle", car_list]:
                 params["vehicle"] = parse_member_list(tmx.Car, car_list)
+            case ["value", valuerange_spec]:
+                min, max = valuerange_spec.split("...", 1)
+
+                if min:
+                    params["valuemin"] = min
+                if max:
+                    params["valuemax"] = max
             case [text]:
                 try:
                     params["name"] += f" {text}"
