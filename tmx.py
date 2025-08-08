@@ -40,7 +40,7 @@ class Environment(StringableEnum):
     Stadium = 7
 
 
-class Leaderboard(StringableEnum):
+class ReplayType(StringableEnum):
     Standard = 0
     Classic = 1
     Nadeo = 2
@@ -49,13 +49,16 @@ class Leaderboard(StringableEnum):
     Star = 5
 
 
-class LeaderboardSearchOrder(Enum):
-    ReplayCountAsc = 3
-    ReplayCountDesc = 4
-    WorldRecordCountAsc = 5
-    WorldRecordCountDesc = 6
-    Top10CountAsc = 7
-    Top10CountDesc = 8
+class LeaderboardsOrderBy(Enum):
+    None_ = 0
+    ScoreAsc = 1
+    ScoreDesc = 2
+    ReplaysAsc = 3
+    ReplaysDesc = 4
+    WorldRecordsAsc = 5
+    WorldRecordsDesc = 6
+    Top10sAsc = 7
+    Top10sDesc = 8
 
 
 class Mood(StringableEnum):
@@ -65,40 +68,42 @@ class Mood(StringableEnum):
     Night = 3
 
 
-class Route(StringableEnum):
+class Routes(StringableEnum):
     Single = 0
     Multiple = 1
-    Symmetrical = 2
+    Symmetric = 2
 
 
-class TrackpackSearchOrder(Enum):
+class TrackPackOrderBy(Enum):
     None_ = 0
-    CreationDateAsc = 1
-    CreationDateDesc = 2
-    UpdateDateAsc = 3
-    UpdateDateDesc = 4
-    TrackCountAsc = 5
-    TrackCountDesc = 6
+    UploadedAsc = 1
+    UploadedDesc = 2
+    UpdatedAsc = 3
+    UpdatedDesc = 4
+    TracksAsc = 5
+    TracksDesc = 6
     ActivityAsc = 7
     ActivityDesc = 8
-    TrackpackNameAsc = 9
-    TrackpackNameDesc = 10
-    CreatorNameAsc = 11
-    CreatorNameDesc = 12
-    DownloadCountAsc = 13
-    DownloadCountDesc = 14
+    PackNameAsc = 9
+    PackNameDesc = 10
+    AuthorNameAsc = 11
+    AuthorNameDesc = 12
+    DownloadsAsc = 13
+    DownloadsDesc = 14
+    TrackPackValueAsc = 15
+    TrackPackValueDesc = 16
 
 
-class TrackSearchOrder(Enum):
+class TrackOrderBy(Enum):
     None_ = 0
-    UploadDateAsc = 1
-    UploadDateDesc = 2
-    UpdateDateAsc = 3
-    UpdateDateDesc = 4
-    AwardCountAsc = 5
-    AwardCountDesc = 6
-    CommentCountAsc = 7
-    CommentCountDesc = 8
+    UploadedAsc = 1
+    UploadedDesc = 2
+    UpdatedAsc = 3
+    UpdatedDesc = 4
+    AwardsAsc = 5
+    AwardsDesc = 6
+    CommentsAsc = 7
+    CommentsDesc = 8
     ActivityAsc = 9
     ActivityDesc = 10
     TrackNameAsc = 11
@@ -107,30 +112,36 @@ class TrackSearchOrder(Enum):
     AuthorNameDesc = 14
     DifficultyAsc = 15
     DifficultyDesc = 16
-    DownloadCountAsc = 17
-    DownloadCountDesc = 18
-    TrackValueAsc = 19
-    TrackValueDesc = 20
-    AwardsThisWeekAsc = 21
-    AwardsThisWeekDesc = 22
-    AwardsThisMonthAsc = 23
-    AwardsThisMonthDesc = 24
-    LastAwardDateAsc = 25
-    LastAwardDateDesc = 26
+    DownloadsAsc = 17
+    DownloadsDesc = 18
+    ReplayScoreAsc = 19
+    ReplayScoreDesc = 20
+    AwardsWeekAsc = 21
+    AwardsWeekDesc = 22
+    AwardsMonthAsc = 23
+    AwardsMonthDesc = 24
+    AwardedAsc = 25
+    AwardedDesc = 26
     WorldRecordSetAsc = 27
     WorldRecordSetDesc = 28
-    # Login required start
-    PersonalRecordSetAsc = 29
-    PersonalRecordSetDesc = 30
-    PersonalAwardSetAsc = 31
-    PersonalAwardSetDesc = 32
-    PersonalDownloadAsc = 33
-    PersonalDownloadDesc = 34
-    PersonalCommentSetAsc = 35
-    PersonalCommentSetDesc = 36
-    # Login required end
+    UserRecordSetAsc = 29
+    UserRecordSetDesc = 30
+    UserAwardedAsc = 31
+    UserAwardedDesc = 32
+    UserDownloadedAsc = 33
+    UserDownloadedDesc = 34
+    UserCommentedAsc = 35
+    UserCommentedDesc = 36
     UserRecordPositionAsc = 37
     UserRecordPositionDesc = 38
+    TrackLengthAsc = 39
+    TrackLengthDesc = 40
+    WorldRecordTimeAsc = 41
+    WorldRecordTimeDesc = 42
+    UserRecordTimeAsc = 43
+    UseeRecordTimeDesc = 44
+    TrackpackPositionAsc = 45
+    TrackpackPositionDesc = 46
 
 
 class TrackTag(StringableEnum):
@@ -138,8 +149,8 @@ class TrackTag(StringableEnum):
     Stunt = 1
     Maze = 2
     Offroad = 3
-    Laps = 4
-    Fullspeed = 5
+    Multilap = 4
+    FullSpeed = 5
     LOL = 6
     Tech = 7
     SpeedTech = 8
@@ -177,22 +188,22 @@ class UnlimiterVersion(Enum):
         return self.name.replace("_", ".").removeprefix("V")
 
 
-class UserSearchOrder(Enum):
+class UserOrderBy(Enum):
     None_ = 0
     NameAsc = 1
     NameDesc = 2
     TracksAsc = 3
     TracksDesc = 4
-    TrackpacksAsc = 5
-    TrackpacksDesc = 6
-    AwardsReceivedAsc = 7
-    AwardsReceivedDesc = 8
-    AwardsGivenAsc = 9
-    AwardsGivenDesc = 10
-    CommentsReceivedAsc = 11
-    CommentsReceivedDesc = 12
-    CommentsGivenAsc = 13
-    CommentsGivenDesc = 14
+    TrackPacksAsc = 5
+    TrackPacksDesc = 6
+    TrackAwardsAsc = 7
+    TrackAwardsDesc = 8
+    TrackAwardsOutAsc = 9
+    TrackAwardsOutDesc = 10
+    TrackCommentsAsc = 11
+    TrackCommentsDesc = 12
+    TrackCommentsOutAsc = 13
+    TrackCommentsOutDesc = 14
     ForumPostsAsc = 15
     ForumPostsDesc = 16
     ForumThreadsAsc = 17
@@ -203,29 +214,40 @@ class UserSearchOrder(Enum):
     VideosPostedDesc = 22
     VideosCreatedAsc = 23
     VideosCreatedDesc = 24
+    ReplayCountAsc = 25
+    ReplayCountDesc = 26
+    FavoritesAsc = 27
+    FavoritesDesc = 28
+    AchievementsAsc = 29
+    AchievementsDesc = 30
+    AuthorMedalsAsc = 31
+    AuthorMedalsDesc = 32
+    GoldMedalsAsc = 33
+    GoldMedalsDesc = 34
+    SilverMedalsAsc = 35
+    SilverMedalsDesc = 36
+    BronzeMedalsAsc = 37
+    BronzeMedalsDesc = 38
 
 
-class Vehicle(Enum):
-    SnowCar = 1
-    DesertCar = 2
-    RallyCar = 3
-    IslandCar = 4
-    CoastCar = 5
-    BayCar = 6
-    StadiumCar = 7
-
-    def __str__(self) -> str:
-        return self.name.removesuffix("Car")
+class Car(StringableEnum):
+    Snow = 1
+    Desert = 2
+    Rally = 3
+    Island = 4
+    Coast = 5
+    Bay = 6
+    Stadium = 7
 
 
 SIMPLE_JSON_FIELDS = {
     "Difficulty": Difficulty,
-    "Routes": Route,
+    "Routes": Routes,
     "Style": TrackTag,
     "Mood": Mood,
     "Environment": Environment,
-    "Car": Vehicle,
-    "ReplayType": Leaderboard,
+    "Car": Car,
+    "ReplayType": ReplayType,
     "PrimaryType": TrackType,
     "UnlimiterVersion": UnlimiterVersion,
 }

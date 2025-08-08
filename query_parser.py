@@ -84,17 +84,17 @@ def parse_track_query(query: str) -> dict[str, str]:
 
                     params["in" + collection_name] = "0" if negate else "1"
             case ["lbtype", type_name]:
-                leaderboard_type = find_member(tmx.Leaderboard, type_name)
+                leaderboard_type = find_member(tmx.ReplayType, type_name)
                 params["lbtype"] = str(leaderboard_type.value)
             case ["mood", mood_list]:
                 params["mood"] = parse_member_list(tmx.Mood, mood_list)
             case ["order1" | "order2" as order, order_name]:
-                order_type = find_member(tmx.TrackSearchOrder, order_name)
+                order_type = find_member(tmx.TrackOrderBy, order_name)
                 params[order] = str(order_type.value)
             case ["packid", pack_id]:
                 params["packid"] = pack_id
             case ["routes", route_list]:
-                params["routes"] = parse_member_list(tmx.Route, route_list)
+                params["routes"] = parse_member_list(tmx.Routes, route_list)
             case ["tags", tags_str]:
                 tags = []
                 exclude = []
@@ -126,9 +126,7 @@ def parse_track_query(query: str) -> dict[str, str]:
                 if end:
                     params["uploadedbefore"] = end
             case ["vehicle", car_list]:
-                params["vehicle"] = parse_member_list(
-                    tmx.Vehicle, (car + "Car" for car in car_list.split(","))
-                )
+                params["vehicle"] = parse_member_list(tmx.Car, car_list)
             case [text]:
                 try:
                     params["name"] += f" {text}"
@@ -146,7 +144,7 @@ def parse_trackpack_query(query: str) -> dict[str, str]:
             case ["creator", name]:
                 params["creator"] = name
             case ["order1" | "order2" as order, order_name]:
-                order_type = find_member(tmx.TrackpackSearchOrder, order_name)
+                order_type = find_member(tmx.TrackPackOrderBy, order_name)
                 params[order] = str(order_type.value)
             case ["trackid", trackid]:
                 params["trackid"] = trackid
@@ -173,7 +171,7 @@ def parse_user_query(query: str) -> dict[str, str]:
 
                     params["in" + collection_name] = "0" if negate else "1"
             case ["order1" | "order2" as order, order_name]:
-                order_type = find_member(tmx.UserSearchOrder, order_name)
+                order_type = find_member(tmx.UserOrderBy, order_name)
                 params[order] = str(order_type.value)
             case ["tracks" | "awards" | "awardsgiven" as criteria, range_spec]:
                 min, max = range_spec.split("...", 1)
@@ -211,12 +209,12 @@ def parse_leaderboard_query(query: str) -> dict[str, str]:
                 params["lbenv"] = str(env.value)
             case ["lbid", lb_id]:
                 try:
-                    lb_type = find_member(tmx.Leaderboard, lb_id)
+                    lb_type = find_member(tmx.ReplayType, lb_id)
                     params["lbid"] = str(lb_type.value)
                 except KeyError:
-                    params["lbid"] = lb_id
+                   params["lbid"] = lb_id
             case ["order1" as order, order_name]:
-                order_type = find_member(tmx.LeaderboardSearchOrder, order_name)
+                order_type = find_member(tmx.LeaderboardsOrderBy, order_name)
                 params[order] = str(order_type.value)
             case [name]:
                 params["username"] = name

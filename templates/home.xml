@@ -34,7 +34,7 @@
 <label style="CardButtonMediumWide" text="Best of the month" posn="0 -20"
     manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisMonthDesc') }}" />
 <label style="CardButtonMediumWide" text="All-time favorites" posn="0 -24"
-    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardCountDesc') }}" />
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsDesc') }}" />
 
 <label style="CardButtonMediumWide" text="Latest trackpacks" posn="0 -32"
     manialink="{{ origin ~ url('trackpack-list') }}" />
