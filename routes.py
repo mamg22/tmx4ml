@@ -101,11 +101,20 @@ async def play_track(request: Request):
 async def random_track(request: Request):
     session = request.app["client_session"]
 
+    random_url = request.app["base_url"] / "trackrandom"
+
+    if packid := request.query.get("packid"):
+        random_url = random_url.with_query(packid=packid)
+
     async with session.get(
-        request.app["base_url"] / "trackrandom", allow_redirects=False
+        random_url, allow_redirects=False
     ) as res:
-        location = res.headers["location"]
-        trackid = location.split("/")[-1]
+        if res.ok:
+            location = res.headers["location"]
+            trackid = location.split("/")[-1]
+        else:
+            text = mc.render_maniacode([mc.ShowMessage("No track found")], noconfirmation=True)
+            return web.Response(text=text, content_type="application/xml")
 
         return render_manialink(
             "redirect.xml",

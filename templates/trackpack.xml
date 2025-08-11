@@ -5,6 +5,7 @@
 {% set sidebar_buttons = {
 0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="packid:" ~ pack.PackId))),
 1: ("Icons128x128_1:Rankings", "Leaderboard", "manialink:{}{}".format(origin, url("leaderboards").with_query(query="lbid:" ~ pack.PackId))),
+2: ("Icons128x128_1:Custom", "Random Track", "manialink:{}{}".format(origin, url("track-random").with_query(packid=pack.PackId))),
 8: ("Icons64x64_1:Windowed", "Open in browser", "url:{}/trackpackshow/{}".format(app["base_url"], pack.PackId)),
 } %}
 
@@ -45,7 +46,7 @@
     {% endcall %}
     {% if pack.IsLegacy %}
     {% call(width, height) titled_box("Legacy trackpack", BODY_LEFT + 20, -28, 56, 13) %}
-    <label text="This trackpack and was created with the legacy system.{{ '\n' }}Some tracks of the pack might not be uploaded on TMX."
+    <label text="This trackpack was created with the legacy system.{{ '\n' }}Some tracks of the pack might not be uploaded on TMX."
             sizen="{{ width }} {{ height }}" autonewline="1" textsize="2" textcolor="f77f"/>
     {% endcall %}
     {% endif %}
