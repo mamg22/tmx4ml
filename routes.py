@@ -113,7 +113,7 @@ async def random_track(request: Request):
             location = res.headers["location"]
             trackid = location.split("/")[-1]
         else:
-            text = mc.render_maniacode([mc.ShowMessage("No track found")], noconfirmation=True)
+            text = mc.render_maniacode([mc.ShowMessage("No track found")])
             return web.Response(text=text, content_type="application/xml")
 
         return render_manialink(
@@ -132,7 +132,7 @@ async def view_replay(request: Request):
     name = "Replay-" + replayid
     url = str(request.app["base_url"] / "recordgbx" / replayid)
 
-    text = mc.render_maniacode([mc.ViewReplay(name, url)], noconfirmation=True)
+    text = mc.render_maniacode([mc.ViewReplay(name, url)])
     return web.Response(text=text, content_type="application/xml")
 
 

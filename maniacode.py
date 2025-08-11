@@ -118,7 +118,7 @@ class InstallTrackPack(ManiaCodeElement):
 
 
 def make_maniacode(
-    items: Sequence[ManiaCodeElement], noconfirmation: bool = False
+    items: Sequence[ManiaCodeElement], noconfirmation: bool = True
 ) -> ET.ElementTree:
     root = ET.Element("maniacode", noconfirmation=str(int(noconfirmation)))
     root.extend(item.serialize() for item in items)
@@ -128,7 +128,7 @@ def make_maniacode(
 
 
 def render_maniacode(
-    items: Sequence[ManiaCodeElement], noconfirmation: bool = False
+    items: Sequence[ManiaCodeElement], noconfirmation: bool = True
 ) -> str:
     maniacode = make_maniacode(items, noconfirmation)
     string = StringIO()
