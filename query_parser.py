@@ -83,7 +83,7 @@ def parse_track_query(query: str) -> dict[str, str]:
                         "featured",
                         "beta",
                     ):
-                        raise ValueError(collection)
+                        raise ValueError(collection_name)
 
                     params["in" + collection_name] = "0" if negate else "1"
             case ["lbtype", type_name]:
@@ -177,7 +177,7 @@ def parse_user_query(query: str) -> dict[str, str]:
                     collection_name = collection.removeprefix("!")
                     negate = collection.startswith("!")
                     if collection_name not in ("supporters", "moderators"):
-                        raise ValueError(collection)
+                        raise ValueError(collection_name)
 
                     params["in" + collection_name] = "0" if negate else "1"
             case ["order1" | "order2" as order, order_name]:

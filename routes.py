@@ -29,7 +29,11 @@ async def track_list(request: Request):
     }
 
     if query := request.query.get("query"):
-        params |= query_parser.parse_track_query(query)
+        try:
+            params |= query_parser.parse_track_query(query)
+        except ValueError as e:
+            err = mc.render_maniacode([mc.ShowMessage(f"Invalid collection: {e.args[0]!r}")])
+            return web.Response(text=err, content_type="application/xml")
 
     if after := request.query.get("after"):
         params["after"] = after
@@ -209,7 +213,11 @@ async def user_list(request: Request):
     url = request.app["api_url"] / "users"
 
     if query := request.query.get("query"):
-        params |= query_parser.parse_user_query(query)
+        try:
+            params |= query_parser.parse_user_query(query)
+        except ValueError as e:
+            err = mc.render_maniacode([mc.ShowMessage(f"Invalid collection: {e.args[0]!r}")])
+            return web.Response(text=err, content_type="application/xml")
 
     if after := request.query.get("after"):
         params["after"] = after
