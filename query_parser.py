@@ -61,7 +61,7 @@ def parse_track_query(query: str) -> dict[str, str]:
                 if max:
                     # TMX makes the range end value inclusive of the given second
                     params["authortimemax"] = str(parse_duration(max) + 999)
-            case ["author" | "awardedby" | "commentedby" as criteria, name]:
+            case ["author" | "authoruserid" | "awardedby" | "commentedby" as criteria, name]:
                 params[criteria] = name
             case ["difficulty", diff_list]:
                 params["difficulty"] = parse_member_list(tmx.Difficulty, diff_list)

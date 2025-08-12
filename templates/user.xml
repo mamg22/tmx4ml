@@ -3,7 +3,7 @@
 {% set quoted_name = '"{}"'.format(user.Name) %}
 
 {% set sidebar_buttons = {
-0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query='author:' ~ quoted_name))),
+0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query='authoruserid:' ~ user.UserId))),
 1: ("Icons128x128_1:Browse", "Trackpacks", "manialink:{}{}".format(origin, url("trackpack-list").with_query(query='creator:' ~ quoted_name))),
 2: ("Icons128x32_1:RT_Cup", "Awards Received", "manialink:{}{}".format(origin, url("track-list").with_query(
     query='order1:awardcountdesc author:' ~ quoted_name))),
