@@ -32,9 +32,9 @@
     manialink="{{ origin ~ url('track-list').with_query(query='value:15000... order1:ActivityDesc') }}" />
 
 <label style="CardButtonMediumWide" text="Best of the week" posn="0 -20"
-    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisWeekDesc') }}" />
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsWeekDesc') }}" />
 <label style="CardButtonMediumWide" text="Best of the month" posn="0 -24"
-    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsThisMonthDesc') }}" />
+    manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsMonthDesc') }}" />
 <label style="CardButtonMediumWide" text="All-time favorites" posn="0 -28"
     manialink="{{ origin ~ url('track-list').with_query(query='order1:AwardsDesc') }}" />
 
