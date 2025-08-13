@@ -21,6 +21,22 @@ def render_manialink(*args, **kwargs):
 json_loader = partial(json.loads, object_hook=tmx.handle_tmx_json)
 
 
+def handle_parser_error(err: query_parser.ParserError) -> web.Response:
+    match err:
+        case query_parser.InvalidValueError():
+            text = f"Invalid value {err.context.value!r} at option {err.context.option!r}"
+        case query_parser.InvalidOptionError():
+            text = f"Invalid option {err.context.option!r}"
+        case query_parser.MissingRangeSeparatorError():
+            text = f"Missing \"...\" at option {err.context.option!r}"
+        case _:
+            text = f"Error parsing search query: {"\n".join(err.args)!r} at {err.context.option!r}"
+
+    msg = mc.render_maniacode([mc.ShowMessage(text)])
+    return web.Response(text=msg, content_type="application/xml")
+
+
+
 async def track_list(request: Request):
     session = request.app["client_session"]
     params = {
@@ -31,9 +47,8 @@ async def track_list(request: Request):
     if query := request.query.get("query"):
         try:
             params |= query_parser.parse_track_query(query)
-        except ValueError as e:
-            err = mc.render_maniacode([mc.ShowMessage(f"Invalid collection: {e.args[0]!r}")])
-            return web.Response(text=err, content_type="application/xml")
+        except query_parser.ParserError as e:
+            return handle_parser_error(e)
 
     if after := request.query.get("after"):
         params["after"] = after
@@ -147,7 +162,10 @@ async def trackpack_list(request: Request):
     url = request.app["api_url"] / "trackpacks"
 
     if query := request.query.get("query"):
-        params |= query_parser.parse_trackpack_query(query)
+        try:
+            params |= query_parser.parse_trackpack_query(query)
+        except query_parser.ParserError as e:
+            return handle_parser_error(e)
 
     if after := request.query.get("after"):
         params["after"] = after
@@ -215,9 +233,8 @@ async def user_list(request: Request):
     if query := request.query.get("query"):
         try:
             params |= query_parser.parse_user_query(query)
-        except ValueError as e:
-            err = mc.render_maniacode([mc.ShowMessage(f"Invalid collection: {e.args[0]!r}")])
-            return web.Response(text=err, content_type="application/xml")
+        except query_parser.ParserError as e:
+            return handle_parser_error(e)
 
     if after := request.query.get("after"):
         params["after"] = after
@@ -278,7 +295,10 @@ async def leaderboards(request: Request):
     url = request.app["api_url"] / "leaderboards"
 
     if query := request.query.get("query"):
-        params |= query_parser.parse_leaderboard_query(query)
+        try:
+            params |= query_parser.parse_leaderboard_query(query)
+        except query_parser.ParserError as e:
+            return handle_parser_error(e)
 
     if after := request.query.get("after"):
         params["after"] = after
