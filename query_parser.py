@@ -47,6 +47,12 @@ def find_member[T: Enum](enum_type: type[T], key: str) -> T:
         if key.lower() == member.lower():
             return enum_type[member]
 
+    try:
+        numeric = int(key)
+        return enum_type(numeric)
+    except ValueError:
+        pass
+
     raise InvalidValueError(key)
 
 
