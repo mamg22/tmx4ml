@@ -33,7 +33,11 @@ class ParserError(Exception):
         )
 
 class InvalidValueError(ParserError):
-    pass
+    fragment: str | None
+
+    def __init__(self, fragment: str | None = None) -> None:
+        self.fragment = fragment
+
 
 class InvalidOptionError(ParserError):
     pass

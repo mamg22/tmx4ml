@@ -24,7 +24,8 @@ json_loader = partial(json.loads, object_hook=tmx.handle_tmx_json)
 def handle_parser_error(err: query_parser.ParserError) -> web.Response:
     match err:
         case query_parser.InvalidValueError():
-            text = f"Invalid value {err.context.value!r} at option {err.context.option!r}"
+            invalid = err.fragment if err.fragment is not None else err.context.value
+            text = f"Invalid value {invalid!r} at option {err.context.option!r}"
         case query_parser.InvalidOptionError():
             text = f"Invalid option {err.context.option!r}"
         case query_parser.MissingRangeSeparatorError():
