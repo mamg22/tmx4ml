@@ -31,7 +31,7 @@
         <label text="{{ user.UserComments | format_bbcode | default('$i$bbb(No text defined)', true) | safe }}"
         style="TextStaticSmall" sizen="{{ width }} {{ height }}" posn="0 0 4" autonewline="1" maxline="20"/>
     {% endcall %}
-    {% call(width, height) titled_box("Statistics", BODY_LEFT + 54, 40, 42, 31) %}
+    {% call(width, height) titled_box("Statistics", BODY_LEFT + 54, 40, 42, 39) %}
     {% for field, value in {
         "Tracks": user.Tracks,
         "Track Packs": user.TrackPacks,
@@ -39,11 +39,26 @@
         "Awards Given": user.TrackAwardsGiven,
         "Comments Received": user.TrackCommentsReceived,
         "Comments Given": user.TrackCommentsGiven,
+        "Favorites": user.Favorites,
+        "Achievements": user.Achievements,
     }.items() %}
         <frame posn="0 {{ -4 * loop.index0 }}">
             <label style="TextStaticSmall" text="{{ field }}" posn="0 0 5"/>
             <label style="TextStaticSmall" text="{{ value }}" posn="{{ width }} 0 4" halign="right"/>
         </frame>
+    {% endfor %}
+    {% endcall %}
+    {% call(width, height) titled_box("Replays ({})".format(user.Replays), BODY_LEFT + 54, 0, 42, 21) %}
+    {% for medal in ( "Author", "Gold", "Silver", "Bronze" ) %}
+        {% set style = medal if medal != "Author" else "Nadeo" %}
+        {% set prev_count = user[loop.previtem + 'Medals'] if not loop.first else 0 %}
+        {% set medal_count = user[medal + 'Medals'] - prev_count %}
+
+        <quad style="MedalsBig" substyle="Medal{{ style }}" posn="{{ 1 + 10 * loop.index0}} 0 6" sizen="6 7" />
+        <label style="TextStaticSmall" text="{{ medal_count }}"
+            posn="{{ 4 + 10 * loop.index0 }} -8 5" halign="center" sizen="6 2"/>
+        <label style="TextStaticSmall" text="{{ '{:.1%}'.format(medal_count / user.Replays) if user.Replays > 0 }}"
+            posn="{{ 4 + 10 * loop.index0 }} -11 5" halign="center" sizen="6 2"/>
     {% endfor %}
     {% endcall %}
 {% endblock body %}

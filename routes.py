@@ -266,7 +266,8 @@ async def user_details(request: Request):
     params = {
         "id": userid,
         "fields": "UserId,Name,IsSupporter,IsModerator,RegisteredAt,Tracks,TrackPacks,UserComments,"
-        "TrackCommentsReceived,TrackCommentsGiven,TrackAwardsReceived,TrackAwardsGiven",
+        "TrackCommentsReceived,TrackCommentsGiven,TrackAwardsReceived,TrackAwardsGiven,"
+        "AuthorMedals,GoldMedals,SilverMedals,BronzeMedals,Replays,Favorites,Achievements",
         "count": 1,
     }
 
