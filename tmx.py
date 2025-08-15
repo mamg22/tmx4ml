@@ -31,13 +31,13 @@ class Difficulty(StringableEnum):
 
 
 class Environment(StringableEnum):
-    Snow = 1
-    Desert = 2
-    Rally = 3
-    Island = 4
-    Coast = 5
-    Bay = 6
-    Stadium = 7
+    Snow = 0
+    Desert = 1
+    Rally = 2
+    Island = 3
+    Coast = 4
+    Bay = 5
+    Stadium = 6
 
 
 class ReplayType(StringableEnum):
@@ -231,13 +231,13 @@ class UserOrderBy(Enum):
 
 
 class Car(StringableEnum):
-    Snow = 1
-    Desert = 2
-    Rally = 3
-    Island = 4
-    Coast = 5
-    Bay = 6
-    Stadium = 7
+    Snow = 0
+    Desert = 1
+    Rally = 2
+    Island = 3
+    Coast = 4
+    Bay = 5
+    Stadium = 6
 
 
 SIMPLE_JSON_FIELDS = {
@@ -269,6 +269,9 @@ def handle_tmx_json(obj: dict[str, Any]) -> dict[str, Any]:
             case "Tags":
                 obj[key] = [TrackTag(tag) for tag in value]
             case simple if simple in SIMPLE_JSON_FIELDS:
+                # TMX returns these values off-by-one, so we need to adjust them for now
+                if key == "Car" or key == "Environment":
+                    value -= 1
                 obj[key] = SIMPLE_JSON_FIELDS[simple](value)
 
     return obj
