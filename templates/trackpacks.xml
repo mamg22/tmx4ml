@@ -3,6 +3,7 @@
 
 {% set sidebar_buttons = {
 0: ("Icons128x128_1:Custom", "Random Trackpack", "manialink:{}{}".format(origin, url("trackpack-random"))),
+1: ("Icons128x128_1:Launch", "Random from Search", "manialink:{}{}".format(origin, url("trackpack-random").with_query(query="search_query"))),
 }
 %}
 

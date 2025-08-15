@@ -4,10 +4,11 @@
 {% set sidebar_buttons = {
     0: ("Icons128x128_1:Challenge", "Find Tracks", "manialink:{}{}".format(origin, url("track-list"))),
     1: ("Icons128x128_1:Custom", "Random Track", "manialink:{}{}".format(origin, url("track-random"))),
-    2: ("Icons128x128_1:Nations", "Nadeo Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:nadeo"))),
-    3: ("Icons128x128_1:Forever", "Classic Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:classic"))),
-    4: ("Icons128x128_1:CustomStars", "Star Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:star")))
-    if app["site"] == "tmuf",
+    2: ("Icons128x128_1:Launch", "Random from Search", "manialink:{}{}".format(origin, url("track-random").with_query(query="search_query"))),
+    3: ("Icons128x128_1:Nations", "Nadeo Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:nadeo"))),
+    4: ("Icons128x128_1:Forever", "Classic Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:classic"))),
+    5: ("Icons128x128_1:CustomStars", "Star Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query="lbtype:star")))
+        if app["site"] == "tmuf",
 }
 %}
 

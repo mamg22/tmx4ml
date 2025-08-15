@@ -125,6 +125,8 @@ async def random_track(request: Request):
 
     if packid := request.query.get("packid"):
         random_url = random_url.with_query(packid=packid)
+    if query := request.query.get("query"):
+        random_url = random_url.with_query(query_parser.parse_track_query(query))
 
     async with session.get(
         random_url, allow_redirects=False
@@ -205,11 +207,20 @@ async def trackpack_details(request: Request):
 async def random_trackpack(request: Request):
     session = request.app["client_session"]
 
+    random_url = request.app["base_url"] / "trackpackrandom"
+
+    if query := request.query.get("query"):
+        random_url = random_url.with_query(query_parser.parse_trackpack_query(query))
+
     async with session.get(
-        request.app["base_url"] / "trackpackrandom", allow_redirects=False
+        random_url, allow_redirects=False
     ) as res:
-        location = res.headers["location"]
-        packid = location.split("/")[-1]
+        if res.ok:
+            location = res.headers["location"]
+            packid = location.split("/")[-1]
+        else:
+            text = mc.render_maniacode([mc.ShowMessage("No trackpack found")])
+            return web.Response(text=text, content_type="application/xml")
 
         return render_manialink(
             "redirect.xml",
