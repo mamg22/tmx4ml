@@ -6,13 +6,13 @@
 0: ("Icons128x128_1:Challenge", "Tracks", "manialink:{}{}".format(origin, url("track-list").with_query(query='authoruserid:' ~ user.UserId))),
 1: ("Icons128x128_1:Browse", "Trackpacks", "manialink:{}{}".format(origin, url("trackpack-list").with_query(query='creator:' ~ quoted_name))),
 2: ("Icons128x32_1:RT_Cup", "Awards Received", "manialink:{}{}".format(origin, url("track-list").with_query(
-    query='order1:awardcountdesc author:' ~ quoted_name))),
+    query='order1:awardsdesc author:' ~ quoted_name))),
 3: ("Icons64x64_1:StateSuggested", "Awards Given", "manialink:{}{}".format(origin, url("track-list").with_query(
-    query='order1:personalawardsetdesc awardedby:' ~ quoted_name))),
+    query='order1:userawardeddesc awardedby:' ~ quoted_name))),
 4: ("Icons64x64_1:Inbox", "Comments Received", "manialink:{}{}".format(origin, url("track-list").with_query(
-    query='order1:commentcountdesc author:' ~ quoted_name))),
+    query='order1:commentsdesc author:' ~ quoted_name))),
 5: ("Icons64x64_1:Outbox", "Comments Given", "manialink:{}{}".format(origin, url("track-list").with_query(
-    query='order1:personalawardsetdesc commentedby:' ~ quoted_name))),
+    query='order1:usercommenteddesc commentedby:' ~ quoted_name))),
 8: ("Icons64x64_1:Windowed", "Open in browser", "url:{}/usershow/{}".format(app["base_url"], user.UserId)),
 } %}
 
