@@ -11,11 +11,11 @@ parser = bbcode.Parser(
     url_template="$l[{href}]{text}$l",
 )
 
-parser.add_simple_formatter("b", "$s%(value)s$s", strip=True)
-parser.add_simple_formatter("i", "$i%(value)s$i", strip=True)
-parser.add_simple_formatter("u", "$i%(value)s$i", strip=True)
-parser.add_simple_formatter("s", "$n%(value)s$m", strip=True)
-parser.add_simple_formatter("img", "$l[%(value)s]<image>$l", strip=True)
+parser.add_simple_formatter("b", "$s%(value)s$s")
+parser.add_simple_formatter("i", "$i%(value)s$i")
+parser.add_simple_formatter("u", "$i%(value)s$i")
+parser.add_simple_formatter("s", "$n%(value)s$m")
+parser.add_simple_formatter("img", "$l[%(value)s]<image>$l")
 parser.add_simple_formatter("tmx", "$oTrackmania$d22Exchange$g$o", standalone=True)
 parser.add_simple_formatter("mx", "$oMania$7dfExchange$g$o", standalone=True)
 
