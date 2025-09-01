@@ -121,6 +121,8 @@ def parse_track_query_item(item: str, params: dict[str, str]) -> None:
             params["difficulty"] = parse_member_list(tmx.Difficulty, diff_list)
         case ["environment", env_list]:
             params["environment"] = parse_member_list(tmx.Environment, env_list)
+        case ["id", track_id]:
+            params["id"] = track_id
         case ["in", collection_list]:
             for collection in collection_list.split(","):
                 collection_name = collection.removeprefix("!")
@@ -219,6 +221,8 @@ def parse_trackpack_query_item(item: str, params: dict[str, str]) -> None:
     match item.split(":", 1):
         case ["creator", name]:
             params["creator"] = name
+        case ["id", pack_id]:
+            params["id"] = pack_id
         case ["order1" | "order2" as order, order_name]:
             order_type = find_member(tmx.TrackPackOrderBy, order_name)
             params[order] = str(order_type.value)
@@ -247,6 +251,8 @@ def parse_trackpack_query(query: str) -> dict[str, str]:
 
 def parse_user_query_item(item: str, params: dict[str, str]) -> None:
     match item.split(":", 1):
+        case ["id", user_id]:
+            params["id"] = user_id
         case ["in", collection_list]:
             for collection in collection_list.split(","):
                 collection_name = collection.removeprefix("!")
