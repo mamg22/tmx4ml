@@ -15,7 +15,7 @@
 {% block body %}
     {% call(width, height) titled_box(pack.PackName, BODY_LEFT + 20, 36, 56, 12) %}
         <quad style="Icons128x128_1" substyle="ChallengeAuthor" posn="0 -0 4" sizen="4 4" />
-        <label text="{{ pack.Creator.Name }}" posn="5 -1 4" sizen="{{ width - 5 }} 3" />
+        <label text="{{ pack.Creator | format_user(link=True) }}" posn="5 -1 4" sizen="{{ width - 5 }} 3" />
     {% endcall %}
 
     {% call(width, height) titled_box("Statistics", BODY_LEFT + 35.5, 20, 25, 22) %}

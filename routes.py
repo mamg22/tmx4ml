@@ -93,7 +93,7 @@ async def track_details(request: Request):
         replay_query = {
             "trackId": trackid,
             "best": 1,
-            "fields": "ReplayId,User.Name,ReplayTime,Position",
+            "fields": "ReplayId,User.Name,User.UserId,ReplayTime,Position",
         }
         replay_url = (request.app["api_url"] / "replays").with_query(replay_query)
         replay_task = tg.create_task(session.get(replay_url))

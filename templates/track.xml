@@ -112,7 +112,7 @@
         {% for replay in replays.Results %}
         <frame posn="0 {{ loop.index0 * -3 }} 4">
             <label text="{{ loop.index }}" style="TextStaticSmall" posn="0 0"/>
-            <label text="{{ replay.User.Name }}" style="TextStaticSmall" posn="3 0" sizen="30" />
+            <label text="{{ replay.User | format_user(link=True) }}" style="TextStaticSmall" posn="3 0" sizen="30" />
             <label text="{{ tmx.format_time(replay.ReplayTime) }}" style="TextRaceChrono" halign="right" scale="0.4" posn="38 0" sizen="40 2" />
             <quad style="Icons64x64_1" substyle="TV" sizen="3 3" posn="39 0"
             manialink="{{ origin ~ url('replay-view', replayid=replay.ReplayId) }}" />
