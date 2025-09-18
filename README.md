@@ -26,3 +26,48 @@ $ uv run main.py
 ```
 
 Once the server is running, open up `http://localhost:8080/` in the manialink browser.
+
+## Docker
+
+You can build and run this project in Docker.
+
+Build the image:
+
+```bash
+docker build -t tmx4ml .
+```
+
+Run the container (the app listens on 0.0.0.0:8080 inside the container):
+
+```bash
+docker run --rm -p 8080:8080 tmx4ml
+```
+
+Pass additional arguments to the program by appending them to the run command. For example, to see available options:
+
+```bash
+docker run --rm -p 8080:8080 tmx4ml --help
+```
+
+Then open http://localhost:8080/ in the manialink browser.
+
+### Docker Compose
+
+Alternatively, use Docker Compose:
+
+```bash
+# Build and start
+docker compose up --build -d
+
+# View logs
+docker compose logs -f
+
+# Stop
+docker compose down
+```
+
+To pass arguments to the app, you can run:
+
+```bash
+docker compose run --rm app --help
+```
