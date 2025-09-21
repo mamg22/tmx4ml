@@ -79,16 +79,16 @@
     {% endcall %}
     {% call(width, height) titled_box('Medals', BODY_LEFT + 1, -6, 48, 16, z=10) %}
         <quad style="MedalsBig" substyle="MedalNadeo" posn="0 0 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.AuthorTime) }}" style="TextRaceChrono" scale="0.5" posn="4 0" sizen="20 3" />
+        <label text="{{ tmx.format_score(track.AuthorScore, track.PrimaryType, track.AuthorTime) }}" style="TextRaceChrono" scale="0.5" posn="4 0" sizen="34 3" />
 
         <quad style="MedalsBig" substyle="MedalGold" posn="0 -4 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.GoldTarget) }}" style="TextRaceChrono" scale="0.5" posn="4 -4" sizen="20 3" />
+        <label text="{{ tmx.format_score(track.GoldTarget, track.PrimaryType) }}" style="TextRaceChrono" scale="0.5" posn="4 -4" sizen="34 3" />
 
         <quad style="MedalsBig" substyle="MedalSilver" posn="{{ width / 2 }} 0 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.SilverTarget) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} 0" sizen="20 3" />
+        <label text="{{ tmx.format_score(track.SilverTarget, track.PrimaryType) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} 0" sizen="34 3" />
 
         <quad style="MedalsBig" substyle="MedalBronze" posn="{{ width / 2 }} -4 6" sizen="3 3" />
-        <label text="{{ tmx.format_time(track.BronzeTarget) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} -4" sizen="20 3" />
+        <label text="{{ tmx.format_score(track.BronzeTarget, track.PrimaryType) }}" style="TextRaceChrono" scale="0.5" posn="{{ width / 2 + 4 }} -4" sizen="34 3" />
     {% endcall %}
     {% call(width, height) titled_box("Details", BODY_LEFT + 1, -23, 48, 19) %}
         <frame posn="0 0 4">
@@ -113,7 +113,7 @@
         <frame posn="0 {{ loop.index0 * -3 }} 4">
             <label text="{{ loop.index }}" style="TextStaticSmall" posn="0 0"/>
             <label text="{{ replay.User | format_user(link=True) }}" style="TextStaticSmall" posn="3 0" sizen="30" />
-            <label text="{{ tmx.format_time(replay.ReplayTime) }}" style="TextRaceChrono" halign="right" scale="0.4" posn="38 0" sizen="40 2" />
+            <label text="{{ tmx.format_score(replay.ReplayScore, track.PrimaryType, replay.ReplayTime, replay.ReplayRespawns) }}" style="TextRaceChrono" halign="right" scale="0.4" posn="38 0" sizen="40 2" />
             <quad style="Icons64x64_1" substyle="TV" sizen="3 3" posn="39 0"
             manialink="{{ origin ~ url('replay-view', replayid=replay.ReplayId) }}" />
         </frame>

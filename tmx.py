@@ -16,6 +16,23 @@ def format_time(millis: int) -> str:
     return time
 
 
+def format_score(
+    score: int,
+    track_type: "TrackType",
+    time: int | None = None,
+    respawns: int | None = None,
+) -> str:
+    if track_type == TrackType.Stunts:
+        return str(score)
+    elif track_type == TrackType.Platform:
+        if time is not None:
+            res = respawns if respawns is not None else score
+            return f"{format_time(time)} ({res})"
+        else:
+            return f"{score}"
+    return format_time(time if time is not None else score)
+
+
 class StringableEnum(Enum):
     """Creates Enum types whose string representation is just their name"""
 

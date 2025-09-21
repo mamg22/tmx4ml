@@ -83,7 +83,7 @@ async def track_details(request: Request):
         track_query = {
             "id": trackid,
             "count": 1,
-            "fields": "TrackId,TrackName,AuthorTime,GoldTarget,SilverTarget,BronzeTarget,Authors,Difficulty,Routes,Mood,Tags,"
+            "fields": "TrackId,TrackName,AuthorTime,AuthorScore,GoldTarget,SilverTarget,BronzeTarget,Authors,Difficulty,Routes,Mood,Tags,"
             "Awards,Comments,ReplayType,TrackValue,PrimaryType,Car,Environment,UploadedAt,UpdatedAt,UnlimiterVersion,AuthorComments",
         }
         track_url = (request.app["api_url"] / "tracks").with_query(track_query)
@@ -92,7 +92,7 @@ async def track_details(request: Request):
         replay_query = {
             "trackId": trackid,
             "best": 1,
-            "fields": "ReplayId,User.Name,User.UserId,ReplayTime,Position",
+            "fields": "ReplayId,User.Name,User.UserId,ReplayTime,ReplayScore,ReplayRespawns,Position",
         }
         replay_url = (request.app["api_url"] / "replays").with_query(replay_query)
         replay_task = tg.create_task(session.get(replay_url))
