@@ -15,6 +15,16 @@
 {% set subtitle = "Tracks" %}
 
 
+{% set environment_tags = {
+    tmx.Environment.Snow: "$666Sn$g",
+    tmx.Environment.Rally: "$4a1R$g",
+    tmx.Environment.Desert: "$aa0D$g",
+    tmx.Environment.Island: "$d22I$g",
+    tmx.Environment.Coast: "$b71C$g",
+    tmx.Environment.Bay: "$49fB$g",
+    tmx.Environment.Stadium: "$1ccSt$g",
+}%}
+
 {% block body %}
 {% call(width, height) titled_box("Find tracks", BODY_LEFT + 1, 46, 96, 89) %}
     <quad style="Bgs1" substyle="BgPager" sizen="{{ width }} 4" posn="0 0 2" />
@@ -47,9 +57,22 @@
         <quad sizen="4 4" halign="left" valign="bottom" posn="1 -13.5 5" style="Icons128x128_1" substyle="{{ difficulty_style }}"/>
         <quad sizen="4 4" halign="left" valign="bottom" posn="4 -13.5 5" style="Icons128x128_1" substyle="{{ track.PrimaryType }}"/>
 
-        {% if track.WRReplay %}
-        <quad sizen="4 4" halign="left" valign="bottom" posn="8 -13.5 5" style="Icons128x128_1" substyle="Replay"/>
+        {% if track.Environment.value == track.Car.value %}
+            <label text="$o{{ environment_tags[track.Environment] }}" sizen="4 4" halign="center" textcolor="444f" textsize="3"
+                valign="bottom" posn="9.5 -13.5 5"/>
+        {% else %}
+            {% set car_as_env = tmx.Environment(track.Car.value) %}
+            {% set enviro_tag = "{}$g{}".format(enviro_tag, environment_tags[car_as_env]) %}
+            <label text="$o{{ environment_tags[track.Environment] }}" sizen="3 3" halign="center" textcolor="444f" textsize="2"
+                valign="bottom" posn="9 -12.5 5"/>
+            <label text="$o{{ environment_tags[car_as_env] }}" sizen="3 3" halign="center" textcolor="444f" textsize="2"
+                valign="bottom" posn="10 -13.5 4"/>
         {% endif %}
+
+        {% if track.WRReplay %}
+        <quad sizen="4 4" halign="left" valign="bottom" posn="11 -13.5 5" style="Icons128x128_1" substyle="Replay"/>
+        {% endif %}
+
 
         <quad sizen="4 4" halign="right" valign="bottom" posn="29.5 -13.5 5" style="Icons64x64_1" substyle="Windowed"
             url="https://tmnf.exchange/trackshow/{{ track.TrackId }}"/>

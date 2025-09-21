@@ -29,20 +29,19 @@ def handle_parser_error(err: query_parser.ParserError) -> web.Response:
         case query_parser.InvalidOptionError():
             text = f"Invalid option {err.context.option!r}"
         case query_parser.MissingRangeSeparatorError():
-            text = f"Missing \"...\" at option {err.context.option!r}"
+            text = f'Missing "..." at option {err.context.option!r}'
         case _:
-            text = f"Error parsing search query: {"\n".join(err.args)!r} at {err.context.option!r}"
+            text = f"Error parsing search query: {'\n'.join(err.args)!r} at {err.context.option!r}"
 
     msg = mc.render_maniacode([mc.ShowMessage(text)])
     return web.Response(text=msg, content_type="application/xml")
-
 
 
 async def track_list(request: Request):
     session = request.app["client_session"]
     params = {
         "count": "10",
-        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty,PrimaryType,Environment,WRReplay.ReplayId",
+        "fields": "TrackId,TrackName,Authors[],Tags[],AuthorTime,Difficulty,PrimaryType,Environment,Car,WRReplay.ReplayId",
     }
 
     if query := request.query.get("query"):
@@ -128,9 +127,7 @@ async def random_track(request: Request):
     if query := request.query.get("query"):
         random_url = random_url.with_query(query_parser.parse_track_query(query))
 
-    async with session.get(
-        random_url, allow_redirects=False
-    ) as res:
+    async with session.get(random_url, allow_redirects=False) as res:
         if res.ok:
             location = res.headers["location"]
             trackid = location.split("/")[-1]
@@ -212,9 +209,7 @@ async def random_trackpack(request: Request):
     if query := request.query.get("query"):
         random_url = random_url.with_query(query_parser.parse_trackpack_query(query))
 
-    async with session.get(
-        random_url, allow_redirects=False
-    ) as res:
+    async with session.get(random_url, allow_redirects=False) as res:
         if res.ok:
             location = res.headers["location"]
             packid = location.split("/")[-1]
