@@ -10,6 +10,7 @@ class ParserContext(NamedTuple):
     option: str
     value: str
 
+
 class ParserError(Exception):
     option: str | None
     value: str | None
@@ -28,9 +29,9 @@ class ParserError(Exception):
     @property
     def context(self):
         return ParserContext(
-            self.option or "<unknown option>",
-            self.value or "<unknown value>"
+            self.option or "<unknown option>", self.value or "<unknown value>"
         )
+
 
 class InvalidValueError(ParserError):
     fragment: str | None
@@ -41,6 +42,7 @@ class InvalidValueError(ParserError):
 
 class InvalidOptionError(ParserError):
     pass
+
 
 class MissingRangeSeparatorError(ParserError):
     pass
@@ -90,6 +92,7 @@ def parse_duration(spec: str) -> int:
 
     return total
 
+
 def parse_range_spec(spec: str) -> tuple[str, str]:
     try:
         a, b = spec.split("...", 1)
@@ -115,7 +118,10 @@ def parse_track_query_item(item: str, params: dict[str, str]) -> None:
             if max:
                 # TMX makes the range end value inclusive of the given second
                 params["authortimemax"] = str(parse_duration(max) + 999)
-        case ["author" | "authoruserid" | "awardedby" | "commentedby" as criteria, name]:
+        case [
+            "author" | "authoruserid" | "awardedby" | "commentedby" as criteria,
+            name,
+        ]:
             params[criteria] = name
         case ["difficulty", diff_list]:
             params["difficulty"] = parse_member_list(tmx.Difficulty, diff_list)
@@ -184,7 +190,7 @@ def parse_track_query_item(item: str, params: dict[str, str]) -> None:
                 params["uploadedafter"] = begin
             if end:
                 params["uploadedbefore"] = end
-        case ["vehicle", car_list]:
+        case ["vehicle" | "car", car_list]:
             params["vehicle"] = parse_member_list(tmx.Car, car_list)
         case ["value", valuerange_spec]:
             min, max = parse_range_spec(valuerange_spec)
@@ -235,7 +241,6 @@ def parse_trackpack_query_item(item: str, params: dict[str, str]) -> None:
                 params["name"] = text
 
 
-
 def parse_trackpack_query(query: str) -> dict[str, str]:
     params = {}
 
@@ -271,8 +276,7 @@ def parse_user_query_item(item: str, params: dict[str, str]) -> None:
                 params[f"{criteria}min"] = min
             if max:
                 params[f"{criteria}max"] = max
-        # Not a typo, for some weird reason TMX uses this keyword for registration date in searches
-        case ["uploaded", daterange_spec]:
+        case ["registered", daterange_spec]:
             begin, end = parse_range_spec(daterange_spec)
 
             if begin:
@@ -284,7 +288,6 @@ def parse_user_query_item(item: str, params: dict[str, str]) -> None:
                 params["name"] += f" {text}"
             except KeyError:
                 params["name"] = text
-
 
 
 def parse_user_query(query: str) -> dict[str, str]:
@@ -312,7 +315,7 @@ def parse_leaderboard_query_item(item: str, params: dict[str, str]) -> None:
                 lb_type = find_member(tmx.ReplayType, lb_id)
                 params["lbid"] = str(lb_type.value)
             except KeyError:
-               params["lbid"] = lb_id
+                params["lbid"] = lb_id
         case ["order1" as order, order_name]:
             order_type = find_member(tmx.LeaderboardsOrderBy, order_name)
             params[order] = str(order_type.value)
@@ -329,6 +332,5 @@ def parse_leaderboard_query(query: str) -> dict[str, str]:
         except ParserError as e:
             e.set_context(*item.split(":", 1))
             raise
-
 
     return params
